@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>13</LangVersion>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DocumentationFile>bin\Debug\net9.0\Books.WebApi.BasicAuthorize.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net9.0\Books.WebApi.BasicAuthorize.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\src\MitMediator.AppAuthorize.Web\MitMediator.AppAuthorize.Web.csproj" />
+      <ProjectReference Include="..\Core\Books.Application\Books.Application.csproj" />
+      <ProjectReference Include="..\Core\Books.Infrastructure\Books.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+    </PropertyGroup>
+
+</Project>
