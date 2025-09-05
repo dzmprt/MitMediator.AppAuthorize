@@ -8,7 +8,7 @@
 
 ## Extension for [MitMediator](https://github.com/dzmprt/MitMediator) that simplifies authentication and authorization via basic auth or JWT bearer tokens
 
-- [🚀 Installation for basic auth](#-installation-for-baseс-auth)
+- [🚀 Installation for basic auth](#-installation-for-basic-auth)
 - [🚀 Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
 - [🛠️ How to use](#-how-to-use)
 - [🧪 Example of web api with jwt bearer auth](#-example-of-web-api-with-jwt-bearer-auth)
