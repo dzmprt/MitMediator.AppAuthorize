@@ -1,8 +1,6 @@
 [![Build and Test](https://github.com/dzmprt/MitMediator.AppAuthorize/actions/workflows/dotnet.yml/badge.svg)](https://github.com/dzmprt/MitMediator.AppAuthorize/actions/workflows/dotnet.yml)
 ![NuGet](https://img.shields.io/nuget/v/MitMediator.AppAuthorize)
 ![.NET 9.0](https://img.shields.io/badge/Version-.NET%209.0-informational?style=flat&logo=dotnet)
-![License](https://img.shields.io/github/license/dzmprt/MitMediator.AppAuthorize)
-
 
 # MitMediator.AppAuthorize
 
