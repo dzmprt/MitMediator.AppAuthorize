@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>13</LangVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>9.0.0-alfa</Version>
+        <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
+        <PackageReleaseNotes>v9.0.0-alfa
+            Extension for MitMediator that simplifies authentication and authorization
+        </PackageReleaseNotes>
+        <Title>MitMediator.AppAuthorize</Title>
+        <Authors>Dmitry Protko</Authors>
+        <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
+        <PackageIcon>logo.png</PackageIcon>
+        <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
+        <PackageTags>mitmediator;authorize;jwt;basic;auth;</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MitMediator" Version="9.0.0"/>
+    </ItemGroup>
+    
+
+    <ItemGroup>
+        <None Include="..\..\assets\logo.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,49 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>13</LangVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <OutputType>Library</OutputType>
+        <Version>9.0.0-alfa</Version>
+        <Description>Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</Description>
+        <PackageReleaseNotes>v9.0.0-alfa
+Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</PackageReleaseNotes>
+        <Title>MitMediator.AppAuthorize.Web</Title>
+        <Authors>Dmitry Protko</Authors>
+        <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
+        <PackageIcon>logo.png</PackageIcon>
+        <PackageTags>mitmediator;authorize;jwt;basic;auth;</PackageTags>
+        <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\MitMediator.AppAuthorize\MitMediator.AppAuthorize.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="MitMediator.AppAuthorize.Web.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\logo.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+</Project>

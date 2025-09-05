@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>MitMediator.AppAuthorize.ClientMediator</Title>
+        <Authors>Dmitry Protko</Authors>
+        <Description>Extension for MitMediator.AutoApi.HttpMediator that enables JWT Bearer authorization. Use the extension methods IClientMediator.GetJwtBearerTokenAsync and IClientMediator.GetJwtBearerTokenByRefreshAsync to retrieve a JWT token from the server, provided the server is configured with MitMediator.AppAuthorize.Web.</Description>
+        <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
+        <PackageIcon>logo.png</PackageIcon>
+        <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
+        <PackageTags>mediator;request;response;queries;commands;mitmediator;minimalapi;autoapi;cqrs;httpmediator;httpclient</PackageTags>
+        <PackageReleaseNotes>v9.0.0-alfa</PackageReleaseNotes>
+        <TrimMode>full</TrimMode>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <Version>9.0.0-alfa</Version>
+        <LangVersion>13</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MitMediator.AutoApi.HttpMediator" Version="9.0.0-alfa-7" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\assets\logo.png" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+</Project>
