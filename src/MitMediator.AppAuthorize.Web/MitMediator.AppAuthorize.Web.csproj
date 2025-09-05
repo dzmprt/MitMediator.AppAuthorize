@@ -24,11 +24,8 @@ Extension for MitMediator that simplifies authentication and authorization via b
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+      <PackageReference Include="MitMediator.AppAuthorize" Version="9.0.0-alfa" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.4" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\MitMediator.AppAuthorize\MitMediator.AppAuthorize.csproj" />
     </ItemGroup>
 
     <ItemGroup>
