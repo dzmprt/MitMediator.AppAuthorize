@@ -133,7 +133,7 @@ To allow anonymous access to request, use attribute `AppAllowAnonymousAttribute`
 public class GetTestRequest : IRequest { }
 ```
 
-To get access to use info in the application layer use `IAuthenticationContext`
+To get access to user info in the application layer use `IAuthenticationContext`
 ```csharp
 public class GetAuthStatusQueryHandler(IAuthenticationContext authenticationContext)
     : IRequestHandler<GetAuthStatusQuery, bool>
