@@ -10,9 +10,9 @@
 
 - [🚀 Installation for basic auth](#-installation-for-basic-auth)
 - [🚀 Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
-- [🛠️ How to use](#-how-to-use)
-- [🧪 Example of web api with jwt bearer auth](#-example-of-web-api-with-jwt-bearer-auth)
-- [🎯 Extension for HttpMediator](#-extension-for-httpmediator)
+- [How to use](#-how-to-use)
+- [Example of web api with jwt bearer auth](#-example-of-web-api-with-jwt-bearer-auth)
+- [Extension for HttpMediator](#-extension-for-httpmediator)
 
 - [📝 Samples](./samples)
 - [📜 License](LICENSE)
@@ -120,7 +120,7 @@ builder.Services.AddSwaggerGen(options => options.AddJwtAuth());
 ```
 
 
-## 🛠️ How to use
+## How to use
 
 By default, all requests require authorization
 
@@ -149,7 +149,7 @@ public class GetAuthStatusQueryHandler(IAuthenticationContext authenticationCont
 > Instead of a refresh token key, you may use any alternative code—such as a one-time code received via **SMS** or **email**.  
 To support this logic, implement the `IRefreshTokenRepository` interface with appropriate handling and validation of such codes.
 
-## 🧪 Example of web api with jwt bearer auth
+## Example of web api with jwt bearer auth
 
 ```csharp
 using System.Collections.Concurrent;
@@ -286,7 +286,7 @@ public class GetTestQueryHandler : IRequestHandler<GetTestQuery>
 }
 ```
 
-# 🎯 Extension for HttpMediator
+# Extension for HttpMediator
 
 Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authorization
 
