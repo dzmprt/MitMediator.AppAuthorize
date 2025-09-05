@@ -10,12 +10,11 @@
 
 - [🚀 Installation for basic auth](#-installation-for-basic-auth)
 - [🚀 Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
-- [How to use](#-how-to-use)
-- [Example of web api with jwt bearer auth](#-example-of-web-api-with-jwt-bearer-auth)
-- [Extension for HttpMediator](#-extension-for-httpmediator)
-
-- [📝 Samples](./samples)
-- [📜 License](LICENSE)
+- [How to use](#how-to-use)
+- [Example of web api with jwt bearer auth](#example-of-web-api-with-jwt-bearer-auth)
+- [Extension for HttpMediator](#extension-for-httpmediator)
+- [Samples](./samples)
+- [License](LICENSE)
 
 ## 🚀 Installation for basic auth
 
