@@ -304,4 +304,4 @@ var jwtByRefreshToken = await httpMediator.GetJwtBearerTokenByRefreshAsync(jwtTo
 ```
 
 
-### 📝 [See more samples](./samples)
+### [See more samples](./samples)
