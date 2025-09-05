@@ -12,6 +12,8 @@
 - [🚀 Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
 - [🛠️ How to use](#-how-to-use)
 - [🧪 Example of web api with jwt bearer auth](#-example-of-web-api-with-jwt-bearer-auth)
+- [🎯 Extension for HttpMediator](#-extension-for-httpmediator)
+
 - [📝 Samples](./samples)
 - [📜 License](LICENSE)
 
@@ -284,7 +286,7 @@ public class GetTestQueryHandler : IRequestHandler<GetTestQuery>
 }
 ```
 
-# 🎯 Extension for MitMediator.AutoApi.HttpMediator
+# 🎯 Extension for HttpMediator
 
 Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authorization
 
