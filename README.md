@@ -6,15 +6,15 @@
 
 ## Extension for [MitMediator](https://github.com/dzmprt/MitMediator) that simplifies authentication and authorization via basic auth or JWT bearer tokens
 
-- [🚀 Installation for basic auth](#-installation-for-basic-auth)
-- [🚀 Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
+- [Installation for basic auth](#-installation-for-basic-auth)
+- [Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
 - [How to use](#how-to-use)
 - [Example of web api with jwt bearer auth](#example-of-web-api-with-jwt-bearer-auth)
 - [Extension for HttpMediator](#extension-for-httpmediator)
 - [Samples](./samples)
 - [License](LICENSE)
 
-## 🚀 Installation for basic auth
+## Installation for basic auth
 
 ### 1. Add package
 
@@ -59,23 +59,23 @@ app.UseBasicAuth();
 builder.Services.AddSwaggerGen(options => options.AddBasicAuth());
 ```
 
-### 6. (Optional) Use middleware for handle auth exceptions
+### 6. (Optional) Use middleware to handle auth exceptions
 
 ```csharp
 // Unauthorized - 401, Forbidden - 403
 app.UseAuthException();
 ```
 
-## 🚀 Installation for jwt bearer auth
+## Installation for jwt bearer auth
 
 ### 1. Add package
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa
+dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa-2
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa
+dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa-2
 ```
 
 ### 2. Inject services for application layer
@@ -116,6 +116,12 @@ app.MapJwtAuthApi();
 builder.Services.AddSwaggerGen(options => options.AddJwtAuth());
 ```
 
+### 6. (Optional) Use middleware to handle auth exceptions
+
+```csharp
+// Unauthorized - 401, Forbidden - 403
+app.UseAuthException();
+```
 
 ## How to use
 
