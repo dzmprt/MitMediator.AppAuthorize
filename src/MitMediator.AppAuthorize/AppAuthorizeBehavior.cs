@@ -2,14 +2,16 @@ using System.Reflection;
 
 namespace MitMediator.AppAuthorize;
 
-public class AppAuthorizeBehavior<TRequest, TResponse>(IAuthenticationContext authContext) 
+internal class AppAuthorizeBehavior<TRequest, TResponse>(IAuthenticationContext authContext) 
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+
+    
     public ValueTask<TResponse> HandleAsync(TRequest request, IRequestHandlerNext<TRequest, TResponse> next, CancellationToken cancellationToken)
     {
         var allowAnonymous = request.GetType().GetCustomAttribute<AppAllowAnonymousAttribute>();
-        if (allowAnonymous != null)
+        if (allowAnonymous != null ||  (SuperuserRoleName.Value != null && authContext.IsInRole(SuperuserRoleName.Value)))
         {
             return next.InvokeAsync(request, cancellationToken);
         }

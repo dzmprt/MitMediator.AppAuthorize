@@ -6,10 +6,10 @@
         <Nullable>enable</Nullable>
         <LangVersion>13</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>9.0.0-alfa</Version>
+        <Version>9.0.0-alfa-3</Version>
         <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
-        <PackageReleaseNotes>v9.0.0-alfa
-            Extension for MitMediator that simplifies authentication and authorization
+        <PackageReleaseNotes>- Added superuser role
+- Changerd TenantId claim name to "http://schemas.microsoft.com/identity/claims/tenantid"
         </PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize</Title>
         <Authors>Dmitry Protko</Authors>
@@ -22,7 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MitMediator" Version="9.0.0"/>
+        <PackageReference Include="MitMediator" Version="9.0.1" />
     </ItemGroup>
     
 
@@ -38,4 +38,8 @@
         <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="MitMediator.AppAuthorize.Tests" />
+    </ItemGroup>
+    
 </Project>

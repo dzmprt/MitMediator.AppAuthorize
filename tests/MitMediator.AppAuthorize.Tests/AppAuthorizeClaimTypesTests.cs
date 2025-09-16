@@ -6,17 +6,17 @@ public class AppAuthorizeClaimTypesTests
     public void TenantClaim_ShouldHaveExpectedValue()
     {
         // Act
-        var claimType = AppAuthorizeClaimTypes.Tenant;
+        var claimType = AppAuthorizeClaimTypes.TenantId;
 
         // Assert
-        Assert.Equal("tenant", claimType);
+        Assert.Equal("http://schemas.microsoft.com/identity/claims/tenantid", claimType);
     }
 
     [Fact]
     public void TenantClaim_ShouldBeConstant()
     {
         // Arrange
-        var fieldInfo = typeof(AppAuthorizeClaimTypes).GetField(nameof(AppAuthorizeClaimTypes.Tenant));
+        var fieldInfo = typeof(AppAuthorizeClaimTypes).GetField(nameof(AppAuthorizeClaimTypes.TenantId));
 
         // Assert
         Assert.NotNull(fieldInfo);

@@ -32,7 +32,7 @@ internal class CreateJwtTokenService(JwtTokenConfiguration jwtTokenConfiguration
         {
             foreach (var tenant in user.Tenants)
             {
-                claims.Add(new Claim(AppAuthorizeClaimTypes.Tenant, tenant));
+                claims.Add(new Claim(AppAuthorizeClaimTypes.TenantId, tenant));
             }
         }
         

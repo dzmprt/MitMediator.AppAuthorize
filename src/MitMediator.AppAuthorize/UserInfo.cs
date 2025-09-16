@@ -1,37 +1,37 @@
 namespace MitMediator.AppAuthorize;
 
 /// <summary>
-/// User info.
+/// Represents user information for authentication and authorization.
 /// </summary>
 public class UserInfo
 {
     /// <summary>
-    /// User id.
+    /// Gets the user identifier.
     /// </summary>
     public string UserId { get; private set; }
 
     /// <summary>
-    /// User name.
+    /// Gets the user name.
     /// </summary>
     public string? Name { get; }
 
     /// <summary>
-    /// User roles.
+    /// Gets the user roles.
     /// </summary>
-    public string[]? Roles { get;  }
+    public string[]? Roles { get; }
 
     /// <summary>
-    /// User tenants.
+    /// Gets the user tenants.
     /// </summary>
-    public string[]? Tenants { get;}
+    public string[]? Tenants { get; }
 
     /// <summary>
-    /// Creat user info.
+    /// Initializes a new instance of the <see cref="UserInfo"/> class.
     /// </summary>
-    /// <param name="userId"><see cref="UserId"/>.</param>
-    /// <param name="name"><see cref="Name"/>.</param>
-    /// <param name="roles"><see cref="Roles"/>.</param>
-    /// <param name="tenants"><see cref="Tenants"/>.</param>
+    /// <param name="userId">The user identifier.</param>
+    /// <param name="name">The user name.</param>
+    /// <param name="roles">The user roles.</param>
+    /// <param name="tenants">The user tenants.</param>
     public UserInfo(string userId, string? name, string[]? roles = null, string[]? tenants = null)
     {
         UserId = userId;
