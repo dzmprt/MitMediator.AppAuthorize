@@ -7,10 +7,10 @@
         <LangVersion>13</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <OutputType>Library</OutputType>
-        <Version>9.0.0-alfa</Version>
+        <Version>9.0.0-alfa-3</Version>
         <Description>Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</Description>
-        <PackageReleaseNotes>v9.0.0-alfa
-Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</PackageReleaseNotes>
+        <PackageReleaseNotes>- Added superuser role
+- Changerd TenantId claim name to "http://schemas.microsoft.com/identity/claims/tenantid"</PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize.Web</Title>
         <Authors>Dmitry Protko</Authors>
         <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>

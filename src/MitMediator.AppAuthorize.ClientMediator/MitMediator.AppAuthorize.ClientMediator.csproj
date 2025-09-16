@@ -12,11 +12,12 @@
         <PackageIcon>logo.png</PackageIcon>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
         <PackageTags>mediator;request;response;queries;commands;mitmediator;minimalapi;autoapi;cqrs;httpmediator;httpclient</PackageTags>
-        <PackageReleaseNotes>v9.0.0-alfa</PackageReleaseNotes>
+        <PackageReleaseNotes>- Added superuser role
+- Changerd TenantId claim name to "http://schemas.microsoft.com/identity/claims/tenantid"</PackageReleaseNotes>
         <TrimMode>full</TrimMode>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Version>9.0.0-alfa</Version>
+        <Version>9.0.0-alfa-3</Version>
         <LangVersion>13</LangVersion>
     </PropertyGroup>
 

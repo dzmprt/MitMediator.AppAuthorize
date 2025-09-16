@@ -20,10 +20,10 @@
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa
+dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa-3
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa
+dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa-3
 ```
 
 ### 2. Inject services for application layer
@@ -47,7 +47,7 @@ builder.Services.AddDefaultAuthContext();
 
 ````
 
-### 4. Use base auth middleware
+### 4. Use basic auth middleware
 
 ```csharp
 app.UseBasicAuth();
@@ -72,10 +72,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa-3
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa-3
 ```
 
 ### 2. Inject services for application layer
@@ -133,7 +133,7 @@ To customize a required role or tenant, use attribute `AppAuthorizeAttribute`
 public class GetTestRequest : IRequest { }
 ```
 
-To allow anonymous access to request, use attribute `AppAllowAnonymousAttribute`
+To allow anonymous access to a request, use attribute `AppAllowAnonymousAttribute`
 ```csharp
 [AppAllowAnonymous]
 public class GetTestRequest : IRequest { }
@@ -149,7 +149,12 @@ public class GetAuthStatusQueryHandler(IAuthenticationContext authenticationCont
 }
 ```
 
-> Instead of a refresh token key, you may use any alternative code—such as a one-time code received via **SMS** or **email**.  
+You can add a superuser role for an admin or the system:
+```csharp
+    services.AddAppAuthorize("admin");
+```
+
+> Instead of a refresh token key, you may use any alternative code, such as a one-time code received via **SMS** or **email**.  
 To support this logic, implement the `IRefreshTokenRepository` interface with appropriate handling and validation of such codes.
 
 ## Example of web api with jwt bearer auth
@@ -176,7 +181,7 @@ builder.Services.AddDefaultAuthContext();
 builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
 // Inject IRefreshTokenRepository implementation
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-// Middle auth logic
+// Authorization pipline behavior
 builder.Services.AddAppAuthorize();
 // Auth and jwt services
 builder.Services.AddJwtAuthServices("key1234567890098765433123123123232323");
@@ -193,7 +198,7 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Handler auth exceptions (Forbidden, Unauthorized)
+// Handle auth exceptions(Forbidden, Unauthorized)
 app.UseAuthException();
 
 app.UseSwagger();
@@ -299,7 +304,7 @@ Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authori
 dotnet add package MitMediator.AppAuthorize.ClientMediator -v 9.0.0-alfa
 ```
 
-### 2. Use extensions methods
+### 2. Use extension methods
 
 ```csharp
 // Get jwt token by login and password
