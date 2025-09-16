@@ -22,7 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MitMediator.AutoApi.HttpMediator" Version="9.0.0-alfa-7" />
+      <PackageReference Include="MitMediator.AutoApi.HttpMediator" Version="9.0.0-alfa-8" />
       <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
     </ItemGroup>
 

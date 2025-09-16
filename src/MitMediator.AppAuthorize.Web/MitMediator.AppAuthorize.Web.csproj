@@ -24,7 +24,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
-      <PackageReference Include="MitMediator.AppAuthorize" Version="9.0.0-alfa" />
+      <PackageReference Include="MitMediator.AppAuthorize" Version="9.0.0-alfa-3" />
       <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.4" />
     </ItemGroup>
 

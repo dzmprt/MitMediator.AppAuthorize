@@ -77,7 +77,7 @@ public class CreateJwtTokenServiceTests
         Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Name && c.Value == "Dmitriy");
         Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Role && c.Value == "Admin");
         Assert.Contains(jwt.Claims, c => c.Type == ClaimTypes.Role && c.Value == "User");
-        Assert.Contains(jwt.Claims, c => c.Type == AppAuthorizeClaimTypes.Tenant && c.Value == "TenantA");
-        Assert.Contains(jwt.Claims, c => c.Type == AppAuthorizeClaimTypes.Tenant && c.Value == "TenantB");
+        Assert.Contains(jwt.Claims, c => c.Type == AppAuthorizeClaimTypes.TenantId && c.Value == "TenantA");
+        Assert.Contains(jwt.Claims, c => c.Type == AppAuthorizeClaimTypes.TenantId && c.Value == "TenantB");
     }
 }

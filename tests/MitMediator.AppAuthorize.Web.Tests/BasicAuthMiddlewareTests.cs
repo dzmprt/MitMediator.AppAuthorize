@@ -52,7 +52,7 @@ public class BasicAuthMiddlewareTests
         Assert.Equal("user123", principal.FindFirst(ClaimTypes.NameIdentifier)?.Value);
         Assert.Equal("Dmitriy", principal.FindFirst(ClaimTypes.Name)?.Value);
         Assert.Contains(principal.Claims, c => c.Type == ClaimTypes.Role && c.Value == "Admin");
-        Assert.Contains(principal.Claims, c => c.Type == AppAuthorizeClaimTypes.Tenant && c.Value == "TenantA");
+        Assert.Contains(principal.Claims, c => c.Type == AppAuthorizeClaimTypes.TenantId && c.Value == "TenantA");
     }
 
     [Fact]

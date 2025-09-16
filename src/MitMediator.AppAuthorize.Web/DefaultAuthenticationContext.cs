@@ -20,5 +20,5 @@ public class DefaultAuthenticationContext(IHttpContextAccessor httpContextAccess
     public Dictionary<string, string>? Claims => httpContextAccessor.HttpContext?.User.Claims.ToDictionary(c => c.Type, c => c.Value);
 
     /// <inheritdoc />
-    public string[]? TenantIds => httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == AppAuthorizeClaimTypes.Tenant).Select(c => c.Value).ToArray();
+    public string[]? TenantIds => httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == AppAuthorizeClaimTypes.TenantId).Select(c => c.Value).ToArray();
 }

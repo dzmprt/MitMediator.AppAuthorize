@@ -44,7 +44,7 @@ public class BasicAuthMiddleware(RequestDelegate next)
                 {
                     foreach (var tenant in user.Tenants)
                     {
-                        claims.Add(new Claim(AppAuthorizeClaimTypes.Tenant, tenant));
+                        claims.Add(new Claim(AppAuthorizeClaimTypes.TenantId, tenant));
                     }
                 }
                 
