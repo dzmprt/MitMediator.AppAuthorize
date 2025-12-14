@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>13</LangVersion>
+        <LangVersion>14</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <OutputType>Library</OutputType>
-        <Version>9.0.0-alfa-3</Version>
+        <Version>10.0.0-alfa</Version>
         <Description>Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</Description>
-        <PackageReleaseNotes>- Added superuser role
-- Changerd TenantId claim name to "http://schemas.microsoft.com/identity/claims/tenantid"</PackageReleaseNotes>
+        <PackageReleaseNotes>10.0.0-alfa
+- Up .net version</PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize.Web</Title>
         <Authors>Dmitry Protko</Authors>
         <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
@@ -23,9 +23,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
-      <PackageReference Include="MitMediator.AppAuthorize" Version="9.0.0-alfa-3" />
-      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.4" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.1" />
+      <PackageReference Include="MitMediator.AppAuthorize" Version="10.0.0-alfa" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 [![Build and Test](https://github.com/dzmprt/MitMediator.AppAuthorize/actions/workflows/dotnet.yml/badge.svg)](https://github.com/dzmprt/MitMediator.AppAuthorize/actions/workflows/dotnet.yml)
 ![NuGet](https://img.shields.io/nuget/v/MitMediator.AppAuthorize)
-![.NET 9.0](https://img.shields.io/badge/Version-.NET%209.0-informational?style=flat&logo=dotnet)
+![.NET 10](https://img.shields.io/badge/Version-.NET%2010-informational?style=flat&logo=dotnet)
 
 # MitMediator.AppAuthorize
 
@@ -20,10 +20,10 @@
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa
 ```
 
 ### 2. Inject services for application layer
@@ -53,13 +53,7 @@ builder.Services.AddDefaultAuthContext();
 app.UseBasicAuth();
 ```
 
-### 5. (Optional) Add swagger security definition
-
-```csharp
-builder.Services.AddSwaggerGen(options => options.AddBasicAuth());
-```
-
-### 6. (Optional) Use middleware to handle auth exceptions
+### 5. (Optional) Use middleware to handle auth exceptions
 
 ```csharp
 // Unauthorized - 401, Forbidden - 403
@@ -72,10 +66,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 9.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-3
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 9.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-3
 ```
 
 ### 2. Inject services for application layer
@@ -110,13 +104,7 @@ builder.Services.AddJwtAuthServices("your-secure-key-here");
 app.MapJwtAuthApi();
 ```
 
-### 5. (Optional) Add swagger security definition
-
-```csharp
-builder.Services.AddSwaggerGen(options => options.AddJwtAuth());
-```
-
-### 6. (Optional) Use middleware to handle auth exceptions
+### 5. (Optional) Use middleware to handle auth exceptions
 
 ```csharp
 // Unauthorized - 401, Forbidden - 403
@@ -162,7 +150,7 @@ To support this logic, implement the `IRefreshTokenRepository` interface with ap
 ```csharp
 using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using MitMediator;
 using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Domain;
@@ -186,14 +174,31 @@ builder.Services.AddAppAuthorize();
 // Auth and jwt services
 builder.Services.AddJwtAuthServices("key1234567890098765433123123123232323");
 
-// Add jwt auth to swagger
+// Add jwt auth to swagger (use Swashbuckle.AspNetCore and Swashbuckle.AspNetCore.SwaggerUI)
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Description = "Username: <b>test</b>, Password: <b>test</b>",
     });
-    options.AddJwtAuth();
+        
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = """
+                      JWT Authorization header using the Bearer scheme. \r\n\r\n
+                                            Enter 'Bearer' [space] and then your token in the text input below.
+                                            \r\n\r\nExample: 'Bearer 12345abcdef'
+                      """,
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+    {
+        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
 });
 
 var app = builder.Build();

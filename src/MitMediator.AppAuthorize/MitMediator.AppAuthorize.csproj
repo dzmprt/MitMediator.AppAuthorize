@@ -1,15 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion>13</LangVersion>
+        <LangVersion>14</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>9.0.0-alfa-3</Version>
+        <Version>10.0.0-alfa</Version>
         <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
-        <PackageReleaseNotes>- Added superuser role
-- Changerd TenantId claim name to "http://schemas.microsoft.com/identity/claims/tenantid"
+        <PackageReleaseNotes>10.0.0-alfa
+- Up .net version
         </PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize</Title>
         <Authors>Dmitry Protko</Authors>
@@ -22,7 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MitMediator" Version="9.0.1" />
+        <PackageReference Include="MitMediator" Version="10.0.0-rc" />
     </ItemGroup>
     
 
