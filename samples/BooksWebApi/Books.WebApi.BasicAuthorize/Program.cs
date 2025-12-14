@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer()
-    .AddSwaggerGen(options => options.AddBasicAuth())
+    .AddSwaggerGen(options => options.ConfigureSwagger())
     .AddDefaultAuthContext()
     .AddApplicationServices()
     .AddPersistenceServices()

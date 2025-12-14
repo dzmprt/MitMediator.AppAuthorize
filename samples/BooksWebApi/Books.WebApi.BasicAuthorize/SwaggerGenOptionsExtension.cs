@@ -6,7 +6,7 @@ namespace Books.WebApi.BasicAuthorize;
 
 internal static class SwaggerGenOptionsExtension
 {
-    public static void AddBasicAuth(this SwaggerGenOptions options)
+    public static void ConfigureSwagger(this SwaggerGenOptions options)
     {
         options.SwaggerDoc("v1", new OpenApiInfo
         {

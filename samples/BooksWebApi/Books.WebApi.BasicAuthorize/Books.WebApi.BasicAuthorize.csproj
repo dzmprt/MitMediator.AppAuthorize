@@ -16,11 +16,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MitMediator.AppAuthorize.Web" Version="10.0.0-alfa" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\MitMediator.AppAuthorize.Web\MitMediator.AppAuthorize.Web.csproj" />
       <ProjectReference Include="..\Core\Books.Application\Books.Application.csproj" />
       <ProjectReference Include="..\Core\Books.Infrastructure\Books.Infrastructure.csproj" />
     </ItemGroup>

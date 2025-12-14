@@ -4,14 +4,13 @@ using Books.WebApi.JwtBearerAuthorize;
 using Books.WebApi.JwtBearerAuthorize.Endpoints;
 using Books.WebApi.JwtBearerAuthorize.Middlewares;
 using MitMediator.AppAuthorize.Web;
-using SimpleWebApiJwtAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer()
-    .AddSwaggerGen(options => options.AddJwtAuth())
+    .AddSwaggerGen(options => options.ConfigureSwagger())
     .AddDefaultAuthContext()
     .AddJwtAuthServices("somekey123456789012345678901234567890")
     .AddApplicationServices()

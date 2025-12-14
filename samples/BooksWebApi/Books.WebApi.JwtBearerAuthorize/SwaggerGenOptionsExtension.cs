@@ -2,11 +2,11 @@ using System.Reflection;
 using Microsoft.OpenApi;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace SimpleWebApiJwtAuth;
+namespace Books.WebApi.JwtBearerAuthorize;
 
-public static class SwaggerGenOptionsExtension
+internal static class SwaggerGenOptionsExtension
 {
-    public static void AddJwtAuth(this SwaggerGenOptions options)
+    public static void ConfigureSwagger(this SwaggerGenOptions options)
     {
         options.SwaggerDoc("v1", new OpenApiInfo
         {
