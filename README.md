@@ -66,10 +66,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa
 ```
 
 ### 2. Inject services for application layer
