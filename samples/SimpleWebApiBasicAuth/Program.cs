@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 using MitMediator;
 using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Web;
+using SimpleWebApiBasicAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -19,22 +20,15 @@ builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
 builder.Services.AddAppAuthorize();
 
 // Add basic auth to swagger
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Description = "Username: <b>test</b>, Password: <b>test</b>",
-    });
-    options.AddBasicAuth();
-});
+builder.Services.AddSwaggerGen(options => options.AddBasicAuth());
 
 var app = builder.Build();
 
 // Handler auth exceptions (Forbidden, Unauthorized)
 app.UseAuthException();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwagger()
+    .UseSwaggerUI();
 
 // Add basic auth middleware
 app.UseBasicAuth();

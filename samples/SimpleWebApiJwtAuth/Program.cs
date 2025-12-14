@@ -1,10 +1,10 @@
 using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi.Models;
 using MitMediator;
 using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Domain;
 using MitMediator.AppAuthorize.Web;
+using SimpleWebApiJwtAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
@@ -25,22 +25,15 @@ builder.Services.AddAppAuthorize();
 builder.Services.AddJwtAuthServices("key1234567890098765433123123123232323");
 
 // Add jwt auth to swagger
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Description = "Username: <b>test</b>, Password: <b>test</b>",
-    });
-    options.AddJwtAuth();
-});
+builder.Services.AddSwaggerGen(options => options.AddJwtAuth());
 
 var app = builder.Build();
 
 // Handler auth exceptions (Forbidden, Unauthorized)
 app.UseAuthException();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwagger()
+    .UseSwaggerUI();
 
 // Map jwt endpoints
 app.MapJwtAuthApi();
