@@ -11,7 +11,7 @@ public static class SwaggerGenOptionsExtension
         {
             Description = "Username: <b>test</b>, Password: <b>test</b>, Code: <b>test</b>",
         });
-        
+
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
         {
             Description = """
