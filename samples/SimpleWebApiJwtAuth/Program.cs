@@ -3,20 +3,21 @@ using Microsoft.AspNetCore.Mvc;
 using MitMediator;
 using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Domain;
+using MitMediator.AppAuthorize.Exceptions;
 using MitMediator.AppAuthorize.Web;
 using SimpleWebApiJwtAuth;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHttpContextAccessor();
 
 // Add MitMediator
 builder.Services.AddMitMediator();
-
 // Add default auth context
 builder.Services.AddDefaultAuthContext();
 // Inject IUserAuthenticator implementation
 builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
+// Inject IUserAuthenticatorByCode implementation
+builder.Services.AddScoped<IUserAuthenticatorByCode, UserAuthenticatorByCode>();
 // Inject IRefreshTokenRepository implementation
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 // Middle authorize logic
@@ -24,8 +25,8 @@ builder.Services.AddAppAuthorize();
 // Auth and jwt services
 builder.Services.AddJwtAuthServices("key1234567890098765433123123123232323");
 
-// Add jwt auth to swagger
-builder.Services.AddSwaggerGen(options => options.AddJwtAuth());
+// Add swagger
+builder.Services.AddSwaggerGen(options => options.ConfigureSwagger());
 
 var app = builder.Build();
 
@@ -36,7 +37,7 @@ app.UseSwagger()
     .UseSwaggerUI();
 
 // Map jwt endpoints
-app.MapJwtAuthApi();
+app.MapAuthApi(useCode: true);
 
 app.MapGet("/auth-status",
     async ([FromServices] IMediator mediator,
@@ -65,15 +66,26 @@ public class UserAuthenticator : IUserAuthenticator
     }
 }
 
+public class UserAuthenticatorByCode : IUserAuthenticatorByCode
+{
+    public ValueTask<UserInfo> AuthByCodeAsync(string username, string code, CancellationToken cancellationToken)
+    {
+        if (username == "test" && code == "test")
+            return ValueTask.FromResult(new UserInfo("testId", "test"));
+
+        throw new ForbiddenException();
+    }
+}
+
 // Implement IRefreshTokenRepository
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
-    private static readonly ConcurrentDictionary<string, RefreshToken> _concurrentDictionary = new();
+    private static readonly ConcurrentDictionary<string, RefreshToken> ConcurrentDictionary = new();
 
     public ValueTask<RefreshToken> AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
     {
         refreshToken.RefreshTokenKey = Guid.NewGuid().ToString();
-        if (!_concurrentDictionary.TryAdd(refreshToken.RefreshTokenKey, refreshToken))
+        if (!ConcurrentDictionary.TryAdd(refreshToken.RefreshTokenKey, refreshToken))
         {
             throw new Exception("Add refresh token error.");
         }
@@ -83,24 +95,25 @@ public class RefreshTokenRepository : IRefreshTokenRepository
 
     public ValueTask<RefreshToken?> GetOrDefaultAsync(string refreshTokenKey, CancellationToken cancellationToken)
     {
-        _concurrentDictionary.TryGetValue(refreshTokenKey, out var value);
+        ConcurrentDictionary.TryGetValue(refreshTokenKey, out var value);
         return ValueTask.FromResult(value);
     }
 
     public ValueTask RemoveAsync(RefreshToken entity, CancellationToken cancellationToken)
     {
-        _concurrentDictionary.TryRemove(entity.RefreshTokenKey, out var value);
+        ConcurrentDictionary.TryRemove(entity.RefreshTokenKey, out var value);
         return ValueTask.CompletedTask;
     }
 
-    public ValueTask<UserInfo?> GetUserInfoByTokenOrDefaultAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+    public ValueTask<UserInfo?> GetUserInfoByTokenOrDefaultAsync(RefreshToken refreshToken,
+        CancellationToken cancellationToken)
     {
-        _concurrentDictionary.TryGetValue(refreshToken.RefreshTokenKey, out var token);
+        ConcurrentDictionary.TryGetValue(refreshToken.RefreshTokenKey, out var token);
         if (token is null)
         {
             return ValueTask.FromResult<UserInfo?>(null);
         }
-        
+
         return ValueTask.FromResult<UserInfo?>(new UserInfo(token.UserId, token.UserId));
     }
 }

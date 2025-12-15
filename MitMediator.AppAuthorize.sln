@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitMediator.AppAuthorize.Cl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleHttpMediatorConsoleApp", "samples\SimpleHttpMediatorConsoleApp\SimpleHttpMediatorConsoleApp.csproj", "{A6A4FC6C-59E3-4690-BCC0-EFF0A678A1E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MitMediator.AppAuthorize.ClientMediator.Tests", "tests\MitMediator.AppAuthorize.ClientMediator.Tests\MitMediator.AppAuthorize.ClientMediator.Tests.csproj", "{81D18737-0075-487B-85D3-01B454454A1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +102,10 @@ Global
 		{A6A4FC6C-59E3-4690-BCC0-EFF0A678A1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6A4FC6C-59E3-4690-BCC0-EFF0A678A1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6A4FC6C-59E3-4690-BCC0-EFF0A678A1E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81D18737-0075-487B-85D3-01B454454A1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D18737-0075-487B-85D3-01B454454A1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D18737-0075-487B-85D3-01B454454A1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81D18737-0075-487B-85D3-01B454454A1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FA27803B-B4F2-40EA-A630-3BBA0C77D342} = {DDC228B6-C852-4479-A44A-7527051E7A6D}
@@ -118,5 +124,6 @@ Global
 		{EDDB49A7-5694-4FD8-8451-9581D93BE348} = {F7E17608-8D0B-4578-8283-DB32A396779A}
 		{556A26FE-ECE8-441A-B6DE-12DC37E163A8} = {DDC228B6-C852-4479-A44A-7527051E7A6D}
 		{A6A4FC6C-59E3-4690-BCC0-EFF0A678A1E0} = {E6FB3C94-7B67-49F4-8945-7A729EC7C911}
+		{81D18737-0075-487B-85D3-01B454454A1A} = {F7E17608-8D0B-4578-8283-DB32A396779A}
 	EndGlobalSection
 EndGlobal

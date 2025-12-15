@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi;
 using MitMediator;
 using MitMediator.AppAuthorize;
+using MitMediator.AppAuthorize.Exceptions;
 using MitMediator.AppAuthorize.Web;
 using SimpleWebApiBasicAuth;
 
@@ -11,7 +12,6 @@ builder.Services.AddHttpContextAccessor();
 
 // Add MitMediator
 builder.Services.AddMitMediator();
-
 // Add default auth context
 builder.Services.AddDefaultAuthContext();
 // Inject IUserAuthenticator implementation
@@ -20,7 +20,7 @@ builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
 builder.Services.AddAppAuthorize();
 
 // Add basic auth to swagger
-builder.Services.AddSwaggerGen(options => options.AddBasicAuth());
+builder.Services.AddSwaggerGen(options => options.ConfigureSwagger());
 
 var app = builder.Build();
 
@@ -56,6 +56,11 @@ public class UserAuthenticator : IUserAuthenticator
             return ValueTask.FromResult(new UserInfo("testId", "test"));
 
         throw new ForbiddenException();
+    }
+
+    public ValueTask<UserInfo> AuthByCodeAsync(string username, string code, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
 

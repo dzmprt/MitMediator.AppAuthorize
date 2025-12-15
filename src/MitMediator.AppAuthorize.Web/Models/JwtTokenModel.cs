@@ -1,4 +1,4 @@
-namespace MitMediator.AppAuthorize.Web.Models.Dtos;
+namespace MitMediator.AppAuthorize.Web.Models;
 
 internal class JwtTokenModel
 {

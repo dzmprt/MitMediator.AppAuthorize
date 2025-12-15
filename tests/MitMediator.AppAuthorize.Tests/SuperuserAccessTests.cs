@@ -1,5 +1,6 @@
 using MitMediator;
 using MitMediator.AppAuthorize;
+using MitMediator.AppAuthorize.Exceptions;
 using MitMediator.AppAuthorize.Tests;
 
 public class SuperuserAccessTests

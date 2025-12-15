@@ -17,7 +17,10 @@ public static class DependencyInjection
     /// <param name="jwtTokenLifeSeconds">Jwt token lifetime in seconds.</param>
     /// <param name="refreshTokenLifeSeconds">Refresh token lifetime in seconds.</param>
     /// <returns><see cref="IServiceProvider"/>.</returns>
-    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services, string issuerSigningKey, int jwtTokenLifeSeconds = 600, int refreshTokenLifeSeconds = 2592000)
+    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services, 
+        string issuerSigningKey, 
+        int jwtTokenLifeSeconds = 600, 
+        int refreshTokenLifeSeconds = 2592000)
     {
         var tokenValidationParameters = new TokenValidationParameters
         {
@@ -50,7 +53,10 @@ public static class DependencyInjection
     /// <param name="jwtTokenLifeSeconds">Jwt token lifetime in seconds.</param>
     /// <param name="refreshTokenLifeSeconds">Refresh token lifetime in seconds.</param>
     /// <returns><see cref="IServiceProvider"/>.</returns>
-    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services, TokenValidationParameters tokenValidationParameters, int jwtTokenLifeSeconds = 600, int refreshTokenLifeSeconds = 2592000)
+    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services, 
+        TokenValidationParameters tokenValidationParameters, 
+        int jwtTokenLifeSeconds = 600, 
+        int refreshTokenLifeSeconds = 2592000)
     {
         services.AddAuthorization()
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -65,13 +71,14 @@ public static class DependencyInjection
     }
 
     /// <summary>
-    /// Add default auth context. <see cref="DefaultAuthenticationContext"/>.
+    /// Use default authentication context <see cref="DefaultAuthenticationContext"/> and add HttpContext accessor.
     /// </summary>
     /// <param name="services"><see cref="IServiceProvider"/>.</param>
     /// <returns><see cref="IServiceProvider"/>.</returns>
     public static IServiceCollection AddDefaultAuthContext(this IServiceCollection services)
     {
-        return services.AddHttpContextAccessor()
+        return services
+            .AddHttpContextAccessor()
             .AddTransient<IAuthenticationContext, DefaultAuthenticationContext>();
     }
 }

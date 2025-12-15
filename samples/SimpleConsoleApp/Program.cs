@@ -5,12 +5,11 @@ using MitMediator.AppAuthorize;
 var services = new ServiceCollection();
 services
     .AddScoped<IAuthenticationContext, AuthenticationContext>()
-    .AddMitMediator(typeof(AnonymousPingRequestHandler).Assembly)
+    .AddMitMediator()
     .AddAppAuthorize();
 
 var provider = services.BuildServiceProvider();
 var mediator = provider.GetRequiredService<IMediator>();
-
 
 // AnonymousPingRequestHandler: Pong
 var result = await mediator.SendAsync<AnonymousPingRequest, string>(new AnonymousPingRequest(), CancellationToken.None);

@@ -1,10 +1,11 @@
 using Books.Application.Abstractions.Infrastructure;
 using Books.Domain;
 using MitMediator.AppAuthorize;
+using MitMediator.AppAuthorize.Exceptions;
 
 namespace Books.Application.Services;
 
-public class UserAuthenticator(IBaseProvider<User> userProvider, IPasswordHasher passwordHasher)
+public class AuthenticatorByPassword(IBaseProvider<User> userProvider, IPasswordHasher passwordHasher)
     : IUserAuthenticator
 {
     public async ValueTask<UserInfo> AuthByPasswordAsync(string username, string password,

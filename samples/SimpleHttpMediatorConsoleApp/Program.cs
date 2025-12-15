@@ -13,7 +13,7 @@ serviceCollection.AddScoped<IClientMediator, HttpMediator>(c => new HttpMediator
 var provider = serviceCollection.BuildServiceProvider();
 var httpMediator = provider.GetRequiredService<IClientMediator>();
 
-var jwtToken = await httpMediator.GetJwtBearerTokenAsync("test", "test", CancellationToken.None);
+var jwtToken = await httpMediator.GetJwtByPasswordAsync("test", "test", CancellationToken.None);
 var jwtTokenProvider = provider.GetRequiredService<JwtTokenProvider>();
 jwtTokenProvider.JwtTokenModel = jwtToken;
 Console.WriteLine($"UserId: {jwtToken.UserId}");
@@ -24,6 +24,6 @@ Console.WriteLine($"Refresh token expires: {jwtToken.RefreshTokenExpires}");
 var isAuth = await httpMediator.SendAsync<GetAuthStatusQuery, bool>(new GetAuthStatusQuery(), CancellationToken.None);
 Console.WriteLine($"Auth status: {isAuth}");
 
-var jwtByRefreshToken = await httpMediator.GetJwtBearerTokenByRefreshAsync(jwtToken.UserId, jwtToken.RefreshToken, CancellationToken.None);
+var jwtByRefreshToken = await httpMediator.GetJwtByRefreshAsync(jwtToken.UserId, jwtToken.RefreshToken, CancellationToken.None);
 Console.WriteLine($"New refresh token: {jwtByRefreshToken.RefreshToken}");
 Console.WriteLine($"New refresh token expires: {jwtByRefreshToken.RefreshTokenExpires}");

@@ -39,6 +39,6 @@ app.UseAuthentication()
 
 app.MapControllers();
 
-app.MapJwtAuthApi();
+app.MapAuthApi(useCode:true);
 
 app.Run();

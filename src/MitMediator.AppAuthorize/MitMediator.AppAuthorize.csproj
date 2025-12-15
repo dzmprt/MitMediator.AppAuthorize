@@ -6,10 +6,10 @@
         <Nullable>enable</Nullable>
         <LangVersion>14</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>10.0.0-alfa</Version>
+        <Version>10.0.0-afa-2</Version>
         <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
-        <PackageReleaseNotes>10.0.0-alfa
-- Up .net version
+        <PackageReleaseNotes>v10.0.0-alfa-2
+- Added authorization by code
         </PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize</Title>
         <Authors>Dmitry Protko</Authors>
