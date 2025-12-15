@@ -20,10 +20,10 @@
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-2
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-2
 ```
 
 ### 2. Inject services for application layer
@@ -66,10 +66,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-2
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-3
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-2
 ```
 
 ### 2. Inject services for application layer
@@ -83,6 +83,10 @@ services.AddAppAuthorize();
 
 // Inject IUserAuthenticator implementation
 builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
+
+// Or/and inject IUserAuthenticatorByCode implementation
+// if you won't use some code for sing-in (form sms, email, etc)
+// builder.Services.AddScoped<IUserAuthenticatorByCode, UserAuthenticatorByCode>();
 
 // Inject IRefreshTokenRepository implementation
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
@@ -143,9 +147,9 @@ You can add a superuser role for an admin or the system:
 ```
 
 > Instead of a refresh token key, you may use any alternative code, such as a one-time code received via **SMS** or **email**.  
-To support this logic, implement the `IRefreshTokenRepository` interface with appropriate handling and validation of such codes.
+To support this logic, implement the `IUserAuthenticatorByCode`.
 
-## Example of web api with jwt bearer auth
+## Example of web api with jwt bearer auth by login and password
 
 ```csharp
 using System.Collections.Concurrent;
@@ -313,10 +317,13 @@ dotnet add package MitMediator.AppAuthorize.ClientMediator -v 9.0.0-alfa
 
 ```csharp
 // Get jwt token by login and password
-var jwtToken = await httpMediator.GetJwtBearerTokenAsync("test", "test", CancellationToken.None);
+var jwtToken = await httpMediator.GetJwtByPasswordAsync("test", "test", CancellationToken.None);
+
+// Get jwt token by code and password
+var jwtTokenByCode = await httpMediator.GetJwtByCodeAsync("test", "test", CancellationToken.None);
 
 // Get jwt token by refresh token key
-var jwtByRefreshToken = await httpMediator.GetJwtBearerTokenByRefreshAsync(jwtToken.UserId, jwtToken.RefreshToken, CancellationToken.None);
+var jwtByRefreshToken = await httpMediator.GetJwtByRefreshAsync(jwtToken.UserId, jwtToken.RefreshToken, CancellationToken.None);
 ```
 
 

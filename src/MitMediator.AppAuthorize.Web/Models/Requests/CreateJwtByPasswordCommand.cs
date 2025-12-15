@@ -1,6 +1,6 @@
 namespace MitMediator.AppAuthorize.Web.Models.Requests;
 
-internal class CreateJwtCommand
+internal class CreateJwtByPasswordCommand : IRequest<JwtTokenModel>
 {
     public string Login { get; init; } = null!;
 

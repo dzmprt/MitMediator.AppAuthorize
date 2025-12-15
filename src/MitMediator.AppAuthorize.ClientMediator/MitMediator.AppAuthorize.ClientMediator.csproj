@@ -12,12 +12,12 @@
         <PackageIcon>logo.png</PackageIcon>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
         <PackageTags>mediator;request;response;queries;commands;mitmediator;minimalapi;autoapi;cqrs;httpmediator;httpclient</PackageTags>
-        <PackageReleaseNotes>10.0.0-alfa
-- Up .net version</PackageReleaseNotes>
+        <PackageReleaseNotes>v10.0.0-alfa-2
+- Added authorization by code</PackageReleaseNotes>
         <TrimMode>full</TrimMode>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Version>10.0.0-alfa</Version>
+        <Version>10.0.0-alfa-2</Version>
         <LangVersion>14</LangVersion>
     </PropertyGroup>
 
@@ -36,6 +36,10 @@
 
     <ItemGroup>
         <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="MitMediator.AppAuthorize.ClientMediator.Tests" />
     </ItemGroup>
 
 </Project>

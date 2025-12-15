@@ -28,6 +28,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\MitMediator.AppAuthorize\MitMediator.AppAuthorize.csproj" />
+      <ProjectReference Include="..\..\src\MitMediator.AppAuthorize.ClientMediator\MitMediator.AppAuthorize.ClientMediator.csproj" />
     </ItemGroup>
 
 </Project>

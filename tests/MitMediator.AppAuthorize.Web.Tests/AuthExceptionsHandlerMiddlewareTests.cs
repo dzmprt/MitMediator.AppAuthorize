@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
+using MitMediator.AppAuthorize.Exceptions;
 
 namespace MitMediator.AppAuthorize.Web.Tests;
 

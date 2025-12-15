@@ -3,9 +3,9 @@ using MitMediator.AutoApi.Abstractions.Attributes;
 
 namespace MitMediator.AppAuthorize.ClientMediator;
 
-[Pattern("auth")]
+[Pattern("auth/by-password")]
 [Method(MethodType.Post)]
-internal class CreateJwtCommand : IRequest<JwtTokenModel>
+internal class CreateJwtByPasswordCommand : IRequest<JwtTokenModel>
 {
     public string Login { get; init; } = null!;
 

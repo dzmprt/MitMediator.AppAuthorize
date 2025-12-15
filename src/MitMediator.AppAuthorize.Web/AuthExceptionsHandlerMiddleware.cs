@@ -1,4 +1,5 @@
 using System.Net;
+using MitMediator.AppAuthorize.Exceptions;
 
 namespace MitMediator.AppAuthorize.Web;
 

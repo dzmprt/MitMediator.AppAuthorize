@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MitMediator.AppAuthorize.Domain;
-using MitMediator.AppAuthorize.Web.Models.Dtos;
+using MitMediator.AppAuthorize.Exceptions;
+using MitMediator.AppAuthorize.Web.Models;
 using MitMediator.AppAuthorize.Web.Models.Requests;
 
 namespace MitMediator.AppAuthorize.Web;
@@ -16,32 +17,49 @@ public static class AuthApi
     /// Use auth api endpoints.
     /// </summary>
     /// <param name="app"><see cref="WebApplication"/>.</param>
+    /// <param name="usePassword">Add endpoint to create jwt token by login and password.</param>
+    /// <param name="useCode">Add endpoint to create jwt token by login and code.</param>
+    /// <param name="useRefreshToken">Add endpoint to create jwt token by refresh token.</param>
     /// <returns><see cref="WebApplication"/>.</returns>
-    public static WebApplication MapJwtAuthApi(this WebApplication app)
+    public static WebApplication MapAuthApi(this WebApplication app, bool usePassword = true, bool useCode = false, bool useRefreshToken = true)
     {
         #region Queries
-        
-        app.MapPost($"{Tag}", CreateJwtTokenAsync)
-            .WithTags(Tag)
-            .WithName("Create jwt token")
-            .Produces<JwtTokenModel>();
-        
-        app.MapPost($"{Tag}/by-refresh", CreateJwtTokenByRefreshToken)
-            .WithTags(Tag)
-            .WithName("Create jwt token by refresh token")
-            .Produces<JwtTokenModel>();
+
+        if (usePassword)
+        {
+            app.MapPost($"{Tag}/by-password", CreateJwtByPasswordAsync)
+                .WithTags(Tag)
+                .WithName("Create jwt token by login and password.")
+                .Produces<JwtTokenModel>();   
+        }
+
+        if (useCode)
+        {
+            app.MapPost($"{Tag}/by-code", CreateJwtByCodeAsync)
+                .WithTags(Tag)
+                .WithName("Create jwt token by login and code.")
+                .Produces<JwtTokenModel>();   
+        }
+
+        if (useRefreshToken)
+        {
+            app.MapPost($"{Tag}/by-refresh", CreateJwtByRefreshToken)
+                .WithTags(Tag)
+                .WithName("Create jwt token by refresh token")
+                .Produces<JwtTokenModel>();   
+        }
    
         #endregion
 
         return app;
     }
     
-    private static async ValueTask<JwtTokenModel> CreateJwtTokenAsync(
+    private static async ValueTask<JwtTokenModel> CreateJwtByPasswordAsync(
         [FromServices] IUserAuthenticator userAuthenticator,
         [FromServices] IRefreshTokenRepository refreshTokens,
         [FromServices] CreateJwtTokenService createJwtTokenService,
         [FromServices] JwtTokenConfiguration jwtTokenConfiguration,
-        [FromBody] CreateJwtCommand createJwtCommand, CancellationToken cancellationToken)
+        [FromBody] CreateJwtByPasswordCommand createJwtCommand, CancellationToken cancellationToken)
     {
         var userInfo = await userAuthenticator.AuthByPasswordAsync(createJwtCommand.Login, createJwtCommand.Password, cancellationToken);
 
@@ -63,7 +81,34 @@ public static class AuthApi
         };
     }
     
-    private static async ValueTask<JwtTokenModel> CreateJwtTokenByRefreshToken(
+    private static async ValueTask<JwtTokenModel> CreateJwtByCodeAsync(
+        [FromServices] IUserAuthenticatorByCode userAuthenticatorByCode,
+        [FromServices] IRefreshTokenRepository refreshTokens,
+        [FromServices] CreateJwtTokenService createJwtTokenService,
+        [FromServices] JwtTokenConfiguration jwtTokenConfiguration,
+        [FromBody] CreateJwtByCodeCommand createJwtCommand, CancellationToken cancellationToken)
+    {
+        var userInfo = await userAuthenticatorByCode.AuthByCodeAsync(createJwtCommand.Login, createJwtCommand.Code, cancellationToken);
+
+        if (userInfo is null)
+        {
+            throw new ForbiddenException();
+        }
+
+        var jwtTokenDateExpires = DateTime.UtcNow.AddSeconds(jwtTokenConfiguration.JwtTokenLifeSeconds);
+        var refreshTokenDateExpires = DateTime.UtcNow.AddSeconds(jwtTokenConfiguration.RefreshTokenLifeSeconds);
+        var token = createJwtTokenService.CreateJwtToken(userInfo, jwtTokenDateExpires);
+        var refreshToken = await refreshTokens.AddAsync(new RefreshToken { UserId = userInfo.UserId, Expired = refreshTokenDateExpires }, cancellationToken);
+
+        return new JwtTokenModel
+        {
+            JwtToken = token,
+            RefreshToken = refreshToken.RefreshTokenKey,
+            RefreshTokenExpires = refreshToken.Expired
+        };
+    }
+    
+    private static async ValueTask<JwtTokenModel> CreateJwtByRefreshToken(
         [FromServices] IUserAuthenticator userAuthenticator,
         [FromServices] IRefreshTokenRepository refreshTokens,
         [FromServices] CreateJwtTokenService createJwtTokenService,

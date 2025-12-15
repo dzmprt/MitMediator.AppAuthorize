@@ -4,7 +4,7 @@ using MitMediator.AppAuthorize;
 
 namespace Books.Application.Services;
 
-public class UserAuthenticator(IBaseProvider<User> userProvider, IPasswordHasher passwordHasher)
+public class AuthenticatorByPassword(IBaseProvider<User> userProvider, IPasswordHasher passwordHasher)
     : IUserAuthenticator
 {
     public async ValueTask<UserInfo> AuthByPasswordAsync(string username, string password,

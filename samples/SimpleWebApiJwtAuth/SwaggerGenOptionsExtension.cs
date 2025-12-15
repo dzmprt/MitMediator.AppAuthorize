@@ -5,11 +5,11 @@ namespace SimpleWebApiJwtAuth;
 
 public static class SwaggerGenOptionsExtension
 {
-    public static void AddJwtAuth(this SwaggerGenOptions options)
+    public static void ConfigureSwagger(this SwaggerGenOptions options)
     {
         options.SwaggerDoc("v1", new OpenApiInfo
         {
-            Description = "Username: <b>test</b>, Password: <b>test</b>",
+            Description = "Username: <b>test</b>, Password: <b>test</b>, Code: <b>test</b>",
         });
         
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

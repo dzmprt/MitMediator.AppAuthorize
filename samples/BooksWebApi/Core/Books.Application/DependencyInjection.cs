@@ -23,7 +23,7 @@ public static class DependencyInjection
         return services
             .AddMitMediator()
             .AddAppAuthorize()
-            .AddTransient<IUserAuthenticator, UserAuthenticator>()
+            .AddTransient<IUserAuthenticator, AuthenticatorByPassword>()
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true)
             .AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     }

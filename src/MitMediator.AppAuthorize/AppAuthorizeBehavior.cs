@@ -1,4 +1,5 @@
 using System.Reflection;
+using MitMediator.AppAuthorize.Exceptions;
 
 namespace MitMediator.AppAuthorize;
 
@@ -6,7 +7,6 @@ internal class AppAuthorizeBehavior<TRequest, TResponse>(IAuthenticationContext 
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-
     
     public ValueTask<TResponse> HandleAsync(TRequest request, IRequestHandlerNext<TRequest, TResponse> next, CancellationToken cancellationToken)
     {

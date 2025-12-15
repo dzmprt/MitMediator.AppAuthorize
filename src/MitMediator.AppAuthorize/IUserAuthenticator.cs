@@ -1,5 +1,8 @@
 namespace MitMediator.AppAuthorize;
 
+/// <summary>
+/// Authenticator by login and password.
+/// </summary>
 public interface IUserAuthenticator
 {
     /// <summary>

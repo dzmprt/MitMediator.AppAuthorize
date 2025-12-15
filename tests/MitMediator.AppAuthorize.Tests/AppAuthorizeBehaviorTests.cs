@@ -1,3 +1,4 @@
+using MitMediator.AppAuthorize.Exceptions;
 using Moq;
 
 namespace MitMediator.AppAuthorize.Tests;

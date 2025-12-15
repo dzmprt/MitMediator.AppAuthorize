@@ -1,6 +1,8 @@
+
 namespace MitMediator.AppAuthorize.Web.Models.Requests;
 
-internal class CreateJwtByRefreshTokenCommand
+
+public class CreateJwtByRefreshTokenCommand : IRequest<JwtTokenModel>
 {
     public string RefreshTokenKey { get; init; } = null!;
 

@@ -1,4 +1,4 @@
-namespace MitMediator.AppAuthorize;
+namespace MitMediator;
 
 /// <summary>
 /// Specifies required roles and/or tenants for accessing a request.
