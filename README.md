@@ -310,7 +310,7 @@ Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authori
 ### 1. Add package
 
 ```bash
-dotnet add package MitMediator.AppAuthorize.ClientMediator -v 9.0.0-alfa
+dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.0-alfa-2
 ```
 
 ### 2. Use extension methods
