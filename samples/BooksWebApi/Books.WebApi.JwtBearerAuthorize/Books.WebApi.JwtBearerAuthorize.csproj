@@ -16,7 +16,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MitMediator.AppAuthorize.Web" Version="10.0.0-alfa" />
+      <PackageReference Include="MitMediator.AppAuthorize.Web" Version="10.0.0-alfa-2" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
     </ItemGroup>
 

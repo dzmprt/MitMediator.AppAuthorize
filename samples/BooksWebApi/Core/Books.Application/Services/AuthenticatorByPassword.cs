@@ -1,6 +1,7 @@
 using Books.Application.Abstractions.Infrastructure;
 using Books.Domain;
 using MitMediator.AppAuthorize;
+using MitMediator.AppAuthorize.Exceptions;
 
 namespace Books.Application.Services;
 
