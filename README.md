@@ -105,7 +105,7 @@ builder.Services.AddJwtAuthServices("your-secure-key-here");
 ### 4. Map jwt endpoints
 
 ```csharp
-app.MapJwtAuthApi();
+app.MapAuthApi();
 ```
 
 ### 5. (Optional) Use middleware to handle auth exceptions
