@@ -8,13 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
-      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="10.0.1" />
+      <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+      <PackageReference Include="Swashbuckle.AspNetCore" />
+      <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\MitMediator.AppAuthorize.Web\MitMediator.AppAuthorize.Web.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="../../src/MitMediator.AppAuthorize.Web/MitMediator.AppAuthorize.Web.csproj" />
+  </ItemGroup>
 </Project>

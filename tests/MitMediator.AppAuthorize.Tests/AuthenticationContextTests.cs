@@ -34,6 +34,13 @@ public class AuthenticationContextTests
     }
 
     [Fact]
+    public void IsInRole_ShouldReturnFalse_WhenRolesAreNull()
+    {
+        IAuthenticationContext context = new FakeAuthenticationContext { UserRoles = null };
+        Assert.False(context.IsInRole("Admin"));
+    }
+
+    [Fact]
     public void IsInOneOfRoles_ShouldReturnTrue_WhenAnyRoleMatches()
     {
         IAuthenticationContext context = new FakeAuthenticationContext { UserRoles = new[] { "User", "Manager" } };
@@ -45,6 +52,13 @@ public class AuthenticationContextTests
     {
         IAuthenticationContext context = new FakeAuthenticationContext { UserRoles = new[] { "User" } };
         Assert.False(context.IsInOneOfRoles(new[] { "Admin", "Manager" }));
+    }
+
+    [Fact]
+    public void IsInOneOfRoles_ShouldReturnFalse_WhenRolesAreNull()
+    {
+        IAuthenticationContext context = new FakeAuthenticationContext { UserRoles = null };
+        Assert.False(context.IsInOneOfRoles(new[] { "Admin" }));
     }
 
     [Fact]
@@ -62,6 +76,13 @@ public class AuthenticationContextTests
     }
 
     [Fact]
+    public void IsInTenant_ShouldReturnFalse_WhenTenantsAreNull()
+    {
+        IAuthenticationContext context = new FakeAuthenticationContext { TenantIds = null };
+        Assert.False(context.IsInTenant("T1"));
+    }
+
+    [Fact]
     public void IsInOneOfTenants_ShouldReturnTrue_WhenAnyTenantMatches()
     {
         IAuthenticationContext context = new FakeAuthenticationContext { TenantIds = new[] { "T1", "T2" } };
@@ -73,6 +94,13 @@ public class AuthenticationContextTests
     {
         IAuthenticationContext context = new FakeAuthenticationContext { TenantIds = new[] { "T1" } };
         Assert.False(context.IsInOneOfTenants(new[] { "T2", "T3" }));
+    }
+
+    [Fact]
+    public void IsInOneOfTenants_ShouldReturnFalse_WhenTenantsAreNull()
+    {
+        IAuthenticationContext context = new FakeAuthenticationContext { TenantIds = null };
+        Assert.False(context.IsInOneOfTenants(new[] { "T1" }));
     }
 
     [Fact]
@@ -102,6 +130,13 @@ public class AuthenticationContextTests
         {
             Claims = new Dictionary<string, string> { ["scope"] = "write" }
         };
+        Assert.False(context.HasClaim("scope", "read"));
+    }
+
+    [Fact]
+    public void HasClaim_ShouldReturnFalse_WhenClaimsAreNull()
+    {
+        IAuthenticationContext context = new FakeAuthenticationContext { Claims = null };
         Assert.False(context.HasClaim("scope", "read"));
     }
 }

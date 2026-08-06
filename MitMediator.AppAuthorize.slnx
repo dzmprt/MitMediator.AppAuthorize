@@ -1,0 +1,27 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/SimpleConsoleApp/SimpleConsoleApp.csproj" />
+    <Project Path="samples/SimpleHttpMediatorConsoleApp/SimpleHttpMediatorConsoleApp.csproj" />
+    <Project Path="samples/SimpleWebApiBasicAuth/SimpleWebApiBasicAuth.csproj" />
+    <Project Path="samples/SimpleWebApiJwtAuth/SimpleWebApiJwtAuth.csproj" />
+  </Folder>
+  <Folder Name="/samples/BooksWebApi/">
+    <Project Path="samples/BooksWebApi/Books.WebApi.BasicAuthorize/Books.WebApi.BasicAuthorize.csproj" />
+    <Project Path="samples/BooksWebApi/Books.WebApi.JwtBearerAuthorize/Books.WebApi.JwtBearerAuthorize.csproj" />
+  </Folder>
+  <Folder Name="/samples/BooksWebApi/Core/">
+    <Project Path="samples/BooksWebApi/Core/Books.Application/Books.Application.csproj" />
+    <Project Path="samples/BooksWebApi/Core/Books.Domain/Books.Domain.csproj" />
+    <Project Path="samples/BooksWebApi/Core/Books.Infrastructure/Books.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/MitMediator.AppAuthorize.ClientMediator/MitMediator.AppAuthorize.ClientMediator.csproj" />
+    <Project Path="src/MitMediator.AppAuthorize/MitMediator.AppAuthorize.csproj" />
+    <Project Path="src/MitMediator.AppAuthorize.Web/MitMediator.AppAuthorize.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MitMediator.AppAuthorize.ClientMediator.Tests/MitMediator.AppAuthorize.ClientMediator.Tests.csproj" />
+    <Project Path="tests/MitMediator.AppAuthorize.Tests/MitMediator.AppAuthorize.Tests.csproj" />
+    <Project Path="tests/MitMediator.AppAuthorize.Web.Tests/MitMediator.AppAuthorize.Web.Tests.csproj" />
+  </Folder>
+</Solution>

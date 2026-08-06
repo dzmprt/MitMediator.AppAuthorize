@@ -6,10 +6,10 @@
 
 ## Extension for [MitMediator](https://github.com/dzmprt/MitMediator) that simplifies authentication and authorization via basic auth or JWT bearer tokens
 
-- [Installation for basic auth](#-installation-for-basic-auth)
-- [Installation for jwt bearer auth](#-installation-for-jwt-bearer-auth)
+- [Installation for basic auth](#installation-for-basic-auth)
+- [Installation for jwt bearer auth](#installation-for-jwt-bearer-auth)
 - [How to use](#how-to-use)
-- [Example of web api with jwt bearer auth](#example-of-web-api-with-jwt-bearer-auth)
+- [Example of web api with jwt bearer auth](#example-of-web-api-with-jwt-bearer-auth-by-login-and-password)
 - [Extension for HttpMediator](#extension-for-httpmediator)
 - [Samples](./samples)
 - [License](LICENSE)
@@ -20,10 +20,10 @@
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-rc
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-rc
 ```
 
 ### 2. Inject services for application layer
@@ -66,10 +66,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize -v 10.0.0-rc
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-rc
 ```
 
 ### 2. Inject services for application layer
@@ -100,7 +100,7 @@ builder.Services.AddDefaultAuthContext();
 
 // Add auth services and configure TokenValidationParameters
 builder.Services.AddJwtAuthServices("your-secure-key-here");
-````
+```
 
 ### 4. Map jwt endpoints
 
@@ -210,11 +210,14 @@ var app = builder.Build();
 // Handle auth exceptions(Forbidden, Unauthorized)
 app.UseAuthException();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
 // Map jwt endpoints
-app.MapJwtAuthApi();
+app.MapAuthApi();
 
 app.MapGet("/auth-status",
     async ([FromServices] IMediator mediator,
@@ -310,7 +313,7 @@ Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authori
 ### 1. Add package
 
 ```bash
-dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.0-alfa-2
+dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.0-rc
 ```
 
 ### 2. Use extension methods
@@ -319,7 +322,7 @@ dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.0-alfa-2
 // Get jwt token by login and password
 var jwtToken = await httpMediator.GetJwtByPasswordAsync("test", "test", CancellationToken.None);
 
-// Get jwt token by code and password
+// Get jwt token by code
 var jwtTokenByCode = await httpMediator.GetJwtByCodeAsync("test", "test", CancellationToken.None);
 
 // Get jwt token by refresh token key

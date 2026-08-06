@@ -17,9 +17,9 @@ public static class DependencyInjection
     /// <param name="jwtTokenLifeSeconds">Jwt token lifetime in seconds.</param>
     /// <param name="refreshTokenLifeSeconds">Refresh token lifetime in seconds.</param>
     /// <returns><see cref="IServiceProvider"/>.</returns>
-    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services, 
-        string issuerSigningKey, 
-        int jwtTokenLifeSeconds = 600, 
+    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services,
+        string issuerSigningKey,
+        int jwtTokenLifeSeconds = 600,
         int refreshTokenLifeSeconds = 2592000)
     {
         var tokenValidationParameters = new TokenValidationParameters
@@ -41,7 +41,7 @@ public static class DependencyInjection
 
         services.AddSingleton<CreateJwtTokenService>();
         services.AddSingleton<JwtTokenConfiguration>(_ => new JwtTokenConfiguration(tokenValidationParameters, jwtTokenLifeSeconds, refreshTokenLifeSeconds));
-        
+
         return services;
     }
 
@@ -53,9 +53,9 @@ public static class DependencyInjection
     /// <param name="jwtTokenLifeSeconds">Jwt token lifetime in seconds.</param>
     /// <param name="refreshTokenLifeSeconds">Refresh token lifetime in seconds.</param>
     /// <returns><see cref="IServiceProvider"/>.</returns>
-    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services, 
-        TokenValidationParameters tokenValidationParameters, 
-        int jwtTokenLifeSeconds = 600, 
+    public static IServiceCollection AddJwtAuthServices(this IServiceCollection services,
+        TokenValidationParameters tokenValidationParameters,
+        int jwtTokenLifeSeconds = 600,
         int refreshTokenLifeSeconds = 2592000)
     {
         services.AddAuthorization()
@@ -64,9 +64,10 @@ public static class DependencyInjection
             {
                 options.TokenValidationParameters = tokenValidationParameters;
             });
-        
+
+        services.AddSingleton<CreateJwtTokenService>();
         services.AddSingleton<JwtTokenConfiguration>(_ => new JwtTokenConfiguration(tokenValidationParameters, jwtTokenLifeSeconds, refreshTokenLifeSeconds));
-        
+
         return services;
     }
 

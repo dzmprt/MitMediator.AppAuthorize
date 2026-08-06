@@ -17,7 +17,9 @@ public class DefaultAuthenticationContext(IHttpContextAccessor httpContextAccess
     public string[]? UserRoles => httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToArray();
 
     /// <inheritdoc />
-    public Dictionary<string, string>? Claims => httpContextAccessor.HttpContext?.User.Claims.ToDictionary(c => c.Type, c => c.Value);
+    public Dictionary<string, string>? Claims => httpContextAccessor.HttpContext?.User.Claims
+        .GroupBy(c => c.Type)
+        .ToDictionary(group => group.Key, group => group.First().Value);
 
     /// <inheritdoc />
     public string[]? TenantIds => httpContextAccessor.HttpContext?.User.Claims.Where(c => c.Type == AppAuthorizeClaimTypes.TenantId).Select(c => c.Value).ToArray();

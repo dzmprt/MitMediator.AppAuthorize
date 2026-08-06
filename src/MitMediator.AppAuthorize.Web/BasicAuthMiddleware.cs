@@ -7,18 +7,30 @@ public class BasicAuthMiddleware(RequestDelegate next)
 {
     public async Task InvokeAsync(HttpContext context)
     {
-        var authenticator = context.RequestServices.GetRequiredService<IUserAuthenticator>();
-
         if (context.Request.Headers.TryGetValue("Authorization", out var headerValue)
             && headerValue.ToString().StartsWith("Basic ", StringComparison.OrdinalIgnoreCase))
         {
             var encodedCredentials = headerValue.ToString().Substring("Basic ".Length).Trim();
-            var credentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials)).Split(':');
-
-            if (credentials.Length == 2)
+            string decodedCredentials;
+            try
             {
-                var user = await authenticator.AuthByPasswordAsync(credentials[0], credentials[1],
-                    CancellationToken.None);
+                decodedCredentials = Encoding.UTF8.GetString(Convert.FromBase64String(encodedCredentials));
+            }
+            catch (FormatException)
+            {
+                SetUnauthorizedResponse(context);
+                return;
+            }
+
+            var separatorIndex = decodedCredentials.IndexOf(':');
+
+            if (separatorIndex >= 0)
+            {
+                var authenticator = context.RequestServices.GetRequiredService<IUserAuthenticator>();
+                var user = await authenticator.AuthByPasswordAsync(
+                    decodedCredentials[..separatorIndex],
+                    decodedCredentials[(separatorIndex + 1)..],
+                    context.RequestAborted);
                 var claims = new List<Claim>();
                 if (user.UserId is null)
                 {
@@ -53,12 +65,17 @@ public class BasicAuthMiddleware(RequestDelegate next)
             }
             else
             {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                context.Response.Headers.Append("WWW-Authenticate", "Basic");
+                SetUnauthorizedResponse(context);
                 return;
             }
         }
 
         await next(context);
+    }
+
+    private static void SetUnauthorizedResponse(HttpContext context)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        context.Response.Headers.Append("WWW-Authenticate", "Basic");
     }
 }

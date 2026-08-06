@@ -30,7 +30,7 @@ public class CreateJwtTokenServiceTests
         // Arrange
         var config = CreateTestConfig();
         var service = new CreateJwtTokenService(config);
-        var user = new UserInfo(null, null);
+        var user = new UserInfo(null!, null);
 
         // Act & Assert
         var ex = Assert.Throws<ArgumentNullException>(() =>

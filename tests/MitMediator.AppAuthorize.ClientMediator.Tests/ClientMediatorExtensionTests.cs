@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using MitMediator.AutoApi.HttpMediator;
 using Moq;
 
@@ -5,6 +7,26 @@ namespace MitMediator.AppAuthorize.ClientMediator.Tests
 {
     public class ClientMediatorExtensionTests
     {
+        [Fact]
+        public void JwtTokenModel_ShouldReadClaimsAndExpiration()
+        {
+            var expires = DateTime.UtcNow.AddMinutes(10);
+            var token = new JwtSecurityToken(
+                claims: [new Claim(ClaimTypes.NameIdentifier, "user-id")],
+                expires: expires);
+            var model = new JwtTokenModel
+            {
+                JwtToken = new JwtSecurityTokenHandler().WriteToken(token),
+                RefreshToken = "refresh-token",
+                RefreshTokenExpires = expires.AddDays(1)
+            };
+
+            Assert.Equal("user-id", model.UserId);
+            Assert.Equal(expires, model.JwtTokenExpires, precision: TimeSpan.FromSeconds(1));
+            Assert.Equal("refresh-token", model.RefreshToken);
+            Assert.Equal(expires.AddDays(1), model.RefreshTokenExpires);
+        }
+
         [Fact]
         public async Task GetJwtByPasswordAsync_Calls_SendAsync_With_Command()
         {
