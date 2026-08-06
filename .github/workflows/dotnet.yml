@@ -5,9 +5,8 @@ name: Build and Test
 
 on:
   push:
-    branches: [ "*" ]
   pull_request:
-    branches: [ "main", "dev" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      contents: read
       pull-requests: write
-      contents: write
 
     strategy:
       matrix:

@@ -26,6 +26,49 @@ public class AppAuthorizeBehaviorTests
     }
 
     [Fact]
+    public async Task HandleAsync_ShouldAllowSuperuserRequest()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        authContext.Setup(a => a.UserRoles).Returns(["Superuser"]);
+        var next = new Mock<IRequestHandlerNext<SecuredRequest, string>>();
+        next.Setup(n => n.InvokeAsync(It.IsAny<SecuredRequest>(), _cancellationToken)).ReturnsAsync("allowed");
+        var behavior = new AppAuthorizeBehavior<SecuredRequest, string>(authContext.Object,
+            new AppAuthorizeConfiguration("Superuser"));
+
+        var result = await behavior.HandleAsync(new SecuredRequest(), next.Object, _cancellationToken);
+
+        Assert.Equal("allowed", result);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldAllowAnonymousRequest_WhenSuperuserRoleIsConfigured()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        var next = new Mock<IRequestHandlerNext<AnonymousRequest, string>>();
+        next.Setup(n => n.InvokeAsync(It.IsAny<AnonymousRequest>(), _cancellationToken)).ReturnsAsync("allowed");
+        var behavior = new AppAuthorizeBehavior<AnonymousRequest, string>(authContext.Object,
+            new AppAuthorizeConfiguration("Superuser"));
+
+        var result = await behavior.HandleAsync(new AnonymousRequest(), next.Object, _cancellationToken);
+
+        Assert.Equal("allowed", result);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldAllowAnonymousRequest_WhenConfigurationHasNoSuperuserRole()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        var next = new Mock<IRequestHandlerNext<AnonymousRequest, string>>();
+        next.Setup(n => n.InvokeAsync(It.IsAny<AnonymousRequest>(), _cancellationToken)).ReturnsAsync("allowed");
+        var behavior = new AppAuthorizeBehavior<AnonymousRequest, string>(authContext.Object,
+            new AppAuthorizeConfiguration(null));
+
+        var result = await behavior.HandleAsync(new AnonymousRequest(), next.Object, _cancellationToken);
+
+        Assert.Equal("allowed", result);
+    }
+
+    [Fact]
     public async Task HandleAsync_ShouldThrowUnauthorized_WhenNotAuthenticated()
     {
         // Arrange
@@ -123,6 +166,20 @@ public class AppAuthorizeBehaviorTests
         Assert.Equal("success", result);
     }
 
+    [Fact]
+    public async Task HandleAsync_ShouldPass_WhenAuthorizationRequirementsAreEmpty()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        authContext.Setup(a => a.UserId).Returns("userId");
+        var next = new Mock<IRequestHandlerNext<EmptyAuthorizationRequest, string>>();
+        next.Setup(n => n.InvokeAsync(It.IsAny<EmptyAuthorizationRequest>(), _cancellationToken)).ReturnsAsync("success");
+        var behavior = new AppAuthorizeBehavior<EmptyAuthorizationRequest, string>(authContext.Object);
+
+        var result = await behavior.HandleAsync(new EmptyAuthorizationRequest(), next.Object, _cancellationToken);
+
+        Assert.Equal("success", result);
+    }
+
     // ====== Fake IRequest types with attributes ======
 
     [AppAllowAnonymous]
@@ -141,6 +198,11 @@ public class AppAuthorizeBehaviorTests
 
     [AppAuthorize(new[] { "Admin" }, new[] { "Tenant1" })]
     public class TenantRestrictedRequest : IRequest<string>
+    {
+    }
+
+    [AppAuthorize([], [])]
+    public class EmptyAuthorizationRequest : IRequest<string>
     {
     }
 }

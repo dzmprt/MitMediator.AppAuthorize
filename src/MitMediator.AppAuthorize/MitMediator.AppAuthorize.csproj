@@ -6,10 +6,10 @@
         <Nullable>enable</Nullable>
         <LangVersion>14</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>10.0.0-afa-2</Version>
+        <Version>10.0.0-rc</Version>
         <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
-        <PackageReleaseNotes>v10.0.0-alfa-2
-- Added authorization by code
+        <PackageReleaseNotes>v10.0.0-rc
+- Fix bugs
         </PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize</Title>
         <Authors>Dmitry Protko</Authors>
@@ -22,7 +22,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MitMediator" Version="10.0.0-rc" />
+        <PackageReference Include="MitMediator" />
     </ItemGroup>
     
 

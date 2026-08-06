@@ -12,18 +12,18 @@
         <PackageIcon>logo.png</PackageIcon>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
         <PackageTags>mediator;request;response;queries;commands;mitmediator;minimalapi;autoapi;cqrs;httpmediator;httpclient</PackageTags>
-        <PackageReleaseNotes>v10.0.0-alfa-2
-- Added authorization by code</PackageReleaseNotes>
+        <PackageReleaseNotes>v10.0.0-rc
+- Fix bugs</PackageReleaseNotes>
         <TrimMode>full</TrimMode>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Version>10.0.0-alfa-2</Version>
+        <Version>10.0.0-rc</Version>
         <LangVersion>14</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MitMediator.AutoApi.HttpMediator" Version="10.0.0-alfa-3" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
+      <PackageReference Include="MitMediator.AutoApi.HttpMediator" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     </ItemGroup>
 
     <ItemGroup>

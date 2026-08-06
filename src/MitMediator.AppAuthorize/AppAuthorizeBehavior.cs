@@ -3,15 +3,22 @@ using MitMediator.AppAuthorize.Exceptions;
 
 namespace MitMediator.AppAuthorize;
 
-internal class AppAuthorizeBehavior<TRequest, TResponse>(IAuthenticationContext authContext) 
+internal class AppAuthorizeBehavior<TRequest, TResponse>(
+    IAuthenticationContext authContext,
+    AppAuthorizeConfiguration configuration)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    
+    public AppAuthorizeBehavior(IAuthenticationContext authContext)
+        : this(authContext, new AppAuthorizeConfiguration(SuperuserRoleName.Value))
+    {
+    }
+
     public ValueTask<TResponse> HandleAsync(TRequest request, IRequestHandlerNext<TRequest, TResponse> next, CancellationToken cancellationToken)
     {
         var allowAnonymous = request.GetType().GetCustomAttribute<AppAllowAnonymousAttribute>();
-        if (allowAnonymous != null ||  (SuperuserRoleName.Value != null && authContext.IsInRole(SuperuserRoleName.Value)))
+        if (allowAnonymous != null ||
+            (configuration.SuperuserRoleName != null && authContext.IsInRole(configuration.SuperuserRoleName)))
         {
             return next.InvokeAsync(request, cancellationToken);
         }
@@ -26,12 +33,12 @@ internal class AppAuthorizeBehavior<TRequest, TResponse>(IAuthenticationContext 
         {
             return next.InvokeAsync(request, cancellationToken);
         }
-        
+
         if (authAttr.Roles is { Length: > 0 } && !authContext.IsInOneOfRoles(authAttr.Roles))
         {
             throw new ForbiddenException($"User must possess at least one of the required roles: {string.Join(", ", authAttr.Roles)}.");
         }
-        
+
         if (authAttr.TenantsIds is { Length: > 0 } && !authContext.IsInOneOfTenants(authAttr.TenantsIds))
         {
             throw new ForbiddenException("Invalid user tenant.");

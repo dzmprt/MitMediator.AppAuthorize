@@ -109,7 +109,6 @@ public static class AuthApi
     }
     
     private static async ValueTask<JwtTokenModel> CreateJwtByRefreshToken(
-        [FromServices] IUserAuthenticator userAuthenticator,
         [FromServices] IRefreshTokenRepository refreshTokens,
         [FromServices] CreateJwtTokenService createJwtTokenService,
         [FromServices] JwtTokenConfiguration jwtTokenConfiguration,
