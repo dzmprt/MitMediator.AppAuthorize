@@ -14,7 +14,7 @@
     <PackageVersion Include="Microsoft.Extensions.Identity.Core" Version="10.0.10" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
     <PackageVersion Include="MitMediator" Version="10.0.0" />
-    <PackageVersion Include="MitMediator.AppAuthorize" Version="10.0.0-afa-2" />
+    <PackageVersion Include="MitMediator.AppAuthorize" Version="10.0.0-rc" />
     <PackageVersion Include="MitMediator.AppAuthorize.Web" Version="10.0.0-alfa-2" />
     <PackageVersion Include="MitMediator.AutoApi.HttpMediator" Version="10.0.0" />
     <PackageVersion Include="Moq" Version="4.20.72" />
