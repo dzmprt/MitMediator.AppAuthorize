@@ -76,6 +76,45 @@ public class BasicAuthMiddlewareTests
     }
 
     [Fact]
+    public async Task InvokeAsync_ShouldReturn401_WhenCredentialsAreNotBase64()
+    {
+        var context = CreateContext("Basic not-base64");
+
+        var middleware = new BasicAuthMiddleware(_ => Task.CompletedTask);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.Equal(StatusCodes.Status401Unauthorized, context.Response.StatusCode);
+        Assert.True(context.Response.Headers.ContainsKey("WWW-Authenticate"));
+    }
+
+    [Fact]
+    public async Task InvokeAsync_ShouldAllowColonInPassword_AndPassRequestCancellation()
+    {
+        using var cancellationSource = new CancellationTokenSource();
+        var user = new UserInfo("user123", "Dmitriy");
+        var mockAuthenticator = new Mock<IUserAuthenticator>();
+        mockAuthenticator
+            .Setup(a => a.AuthByPasswordAsync("login", "pass:word", cancellationSource.Token))
+            .ReturnsAsync(user);
+
+        var context = CreateContext(EncodeBasic("login", "pass:word"));
+        context.RequestAborted = cancellationSource.Token;
+        context.RequestServices = new ServiceCollection()
+            .AddSingleton(mockAuthenticator.Object)
+            .BuildServiceProvider();
+
+        var middleware = new BasicAuthMiddleware(_ => Task.CompletedTask);
+
+        await middleware.InvokeAsync(context);
+
+        Assert.True(context.User.Identity?.IsAuthenticated);
+        mockAuthenticator.Verify(
+            a => a.AuthByPasswordAsync("login", "pass:word", cancellationSource.Token),
+            Times.Once);
+    }
+
+    [Fact]
     public async Task InvokeAsync_ShouldSkipAuth_WhenNoAuthorizationHeader()
     {
         // Arrange
@@ -104,7 +143,7 @@ public class BasicAuthMiddlewareTests
     public async Task InvokeAsync_ShouldThrow_WhenUserIdIsNull()
     {
         // Arrange
-        var user = new UserInfo(null, "Name");
+        var user = new UserInfo(null!, "Name");
         var mockAuthenticator = new Mock<IUserAuthenticator>();
         mockAuthenticator
             .Setup(a => a.AuthByPasswordAsync("login", "pass", It.IsAny<CancellationToken>()))

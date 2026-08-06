@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using MitMediator;
 using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Exceptions;
@@ -5,6 +6,20 @@ using MitMediator.AppAuthorize.Tests;
 
 public class SuperuserAccessTests
 {
+    [Fact]
+    public async Task SuperuserRole_IsScopedToServiceProvider()
+    {
+        var firstProvider = CreateProvider("first-superuser", "first-superuser");
+        var secondProvider = CreateProvider("second-superuser", "second-superuser");
+        var next = new DummyNextHandler<string>(() => ValueTask.FromResult("ok"));
+
+        var firstBehavior = firstProvider.GetRequiredService<IPipelineBehavior<DummyRequest, string>>();
+        var secondBehavior = secondProvider.GetRequiredService<IPipelineBehavior<DummyRequest, string>>();
+
+        Assert.Equal("ok", await firstBehavior.HandleAsync(new DummyRequest(), next, CancellationToken.None));
+        Assert.Equal("ok", await secondBehavior.HandleAsync(new DummyRequest(), next, CancellationToken.None));
+    }
+
     [Fact]
     public async Task SuperuserRole_AllowsAccessToAnyRequest()
     {
@@ -35,8 +50,7 @@ public class SuperuserAccessTests
             UserRoles = new[] { "notsuper" }
         };
         var behavior = new AppAuthorizeBehavior<DummyRequest, string>(context);
-        var nextCalled = false;
-        var next = new DummyNextHandler<string>(() => { nextCalled = true; return new ValueTask<string>("ok"); });
+        var next = new DummyNextHandler<string>(() => new ValueTask<string>("ok"));
         
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ForbiddenException>(async () => await behavior.HandleAsync(new DummyRequest(), next, CancellationToken.None)) ;
@@ -50,5 +64,17 @@ public class SuperuserAccessTests
         private readonly Func<ValueTask<T>> _func;
         public DummyNextHandler(Func<ValueTask<T>> func) => _func = func;
         public ValueTask<T> InvokeAsync(DummyRequest request, CancellationToken cancellationToken) => _func();
+    }
+
+    private static ServiceProvider CreateProvider(string configuredRole, string userRole)
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<IAuthenticationContext>(new FakeAuthenticationContext
+        {
+            UserId = "1",
+            UserRoles = [userRole]
+        });
+        services.AddAppAuthorize(configuredRole);
+        return services.BuildServiceProvider();
     }
 }

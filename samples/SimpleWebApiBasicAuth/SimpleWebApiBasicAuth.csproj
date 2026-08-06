@@ -8,11 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="10.0.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\..\src\MitMediator.AppAuthorize.Web\MitMediator.AppAuthorize.Web.csproj" />
-    </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="../../src/MitMediator.AppAuthorize.Web/MitMediator.AppAuthorize.Web.csproj" />
+  </ItemGroup>
 </Project>

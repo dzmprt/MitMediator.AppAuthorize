@@ -14,6 +14,8 @@ public static class DependencyInjection
     public static IServiceCollection AddAppAuthorize(this IServiceCollection services, string? superuserRoleName = null)
     {
         SuperuserRoleName.Value = superuserRoleName;
-        return services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AppAuthorizeBehavior<,>));
+        return services
+            .AddSingleton(new AppAuthorizeConfiguration(superuserRoleName))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(AppAuthorizeBehavior<,>));
     }
 }

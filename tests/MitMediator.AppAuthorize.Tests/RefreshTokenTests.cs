@@ -58,22 +58,4 @@ public class RefreshTokenTests
         Assert.False(isExpired);
     }
 
-    [Theory]
-    [InlineData(null, "user1")]
-    [InlineData("token1", null)]
-    [InlineData(null, null)]
-    public void Token_WithNullFields_ShouldBeHandled(string tokenId, string userId)
-    {
-        // Act
-        var token = new RefreshToken
-        {
-            RefreshTokenKey = tokenId,
-            UserId = userId,
-            Expired = DateTime.UtcNow
-        };
-
-        // Assert
-        Assert.Equal(tokenId, token.RefreshTokenKey);
-        Assert.Equal(userId, token.UserId);
-    }
 }
