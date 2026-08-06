@@ -1,6 +1,9 @@
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -8,6 +11,18 @@ namespace MitMediator.AppAuthorize.Web.Tests;
 
 public class BasicAuthMiddlewareTests
 {
+    [Fact]
+    public void UseBasicAuth_ShouldReturnTheApplicationBuilder()
+    {
+        var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseTestServer();
+        var app = builder.Build();
+
+        var result = app.UseBasicAuth();
+
+        Assert.Same(app, result);
+    }
+
     private static string EncodeBasic(string username, string password)
     {
         var raw = $"{username}:{password}";

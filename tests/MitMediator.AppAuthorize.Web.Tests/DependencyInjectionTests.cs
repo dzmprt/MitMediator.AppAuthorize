@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace MitMediator.AppAuthorize.Web.Tests;
@@ -48,6 +50,9 @@ public class DependencyInjectionTests
         Assert.Equal(1200, config.JwtTokenLifeSeconds);
         Assert.Equal(7200, config.RefreshTokenLifeSeconds);
         Assert.Same(parameters, config.TokenValidationParameters);
+        Assert.Same(parameters,
+            provider.GetRequiredService<IOptionsMonitor<JwtBearerOptions>>().Get(JwtBearerDefaults.AuthenticationScheme)
+                .TokenValidationParameters);
     }
 
     [Fact]

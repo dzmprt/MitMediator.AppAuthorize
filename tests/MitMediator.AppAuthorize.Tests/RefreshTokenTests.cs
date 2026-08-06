@@ -58,4 +58,17 @@ public class RefreshTokenTests
         Assert.False(isExpired);
     }
 
+    [Fact]
+    public void UserInfo_ShouldAssignAllProperties()
+    {
+        var user = new UserInfo("user", "name", ["Admin"], ["Tenant"]);
+
+        Assert.Equal("user", user.UserId);
+        Assert.Equal("name", user.Name);
+        Assert.NotNull(user.Roles);
+        Assert.NotNull(user.Tenants);
+        Assert.Equal(["Admin"], user.Roles);
+        Assert.Equal(["Tenant"], user.Tenants);
+    }
+
 }
