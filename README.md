@@ -20,10 +20,10 @@
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc
+dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc-3
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc-3
 ```
 
 ### 2. Inject services for application layer
@@ -75,10 +75,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc
+dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc-3
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc-3
 ```
 
 ### 2. Inject services for application layer
@@ -313,7 +313,7 @@ Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authori
 ### 1. Add package
 
 ```bash
-dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.1-rc
+dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.1-rc-3
 ```
 
 ### 2. Use extension methods
