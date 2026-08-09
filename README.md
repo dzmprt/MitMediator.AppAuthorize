@@ -6,59 +6,13 @@
 
 ## Extension for [MitMediator](https://github.com/dzmprt/MitMediator) that simplifies authentication and authorization via basic auth or JWT bearer tokens
 
-- [Installation for basic auth](#installation-for-basic-auth)
 - [Installation for jwt bearer auth](#installation-for-jwt-bearer-auth)
+- [Installation for basic auth](#installation-for-basic-auth)
 - [How to use](#how-to-use)
 - [Example of web api with jwt bearer auth](#example-of-web-api-with-jwt-bearer-auth-by-login-and-password)
 - [Extension for HttpMediator](#extension-for-httpmediator)
 - [Samples](./samples)
 - [License](LICENSE)
-
-## Installation for basic auth
-
-### 1. Add package
-
-```bash
-# for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-rc
-
-# for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-rc
-```
-
-### 2. Inject services for application layer
-
-```csharp
-// Register handlers and IMediator
-services.AddMitMediator();
-
-// Register authorization pipe
-services.AddAppAuthorize();
-
-// Inject IUserAuthenticator implementation
-builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
-```
-
-### 3. Inject services for web layer
-
-```csharp
-// Add default auth context (or implement and inject IAuthenticationContext)
-builder.Services.AddDefaultAuthContext();
-
-````
-
-### 4. Use basic auth middleware
-
-```csharp
-app.UseBasicAuth();
-```
-
-### 5. (Optional) Use middleware to handle auth exceptions
-
-```csharp
-// Unauthorized - 401, Forbidden - 403
-app.UseAuthException();
-```
 
 ## Installation for jwt bearer auth
 
@@ -66,10 +20,10 @@ app.UseAuthException();
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.0-rc
+dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.0-rc
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc
 ```
 
 ### 2. Inject services for application layer
@@ -106,6 +60,52 @@ builder.Services.AddJwtAuthServices("your-secure-key-here");
 
 ```csharp
 app.MapAuthApi();
+```
+
+### 5. (Optional) Use middleware to handle auth exceptions
+
+```csharp
+// Unauthorized - 401, Forbidden - 403
+app.UseAuthException();
+```
+
+## Installation for basic auth
+
+### 1. Add package
+
+```bash
+# for application layer
+dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc
+
+# for ASP.NET projects
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc
+```
+
+### 2. Inject services for application layer
+
+```csharp
+// Register handlers and IMediator
+services.AddMitMediator();
+
+// Register authorization pipe
+services.AddAppAuthorize();
+
+// Inject IUserAuthenticator implementation
+builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
+```
+
+### 3. Inject services for web layer
+
+```csharp
+// Add default auth context (or implement and inject IAuthenticationContext)
+builder.Services.AddDefaultAuthContext();
+
+````
+
+### 4. Use basic auth middleware
+
+```csharp
+app.UseBasicAuth();
 ```
 
 ### 5. (Optional) Use middleware to handle auth exceptions
@@ -313,7 +313,7 @@ Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authori
 ### 1. Add package
 
 ```bash
-dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.0-rc
+dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.1-rc
 ```
 
 ### 2. Use extension methods
