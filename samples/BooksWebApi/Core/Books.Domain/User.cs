@@ -11,13 +11,13 @@ public class User
     
     public int UserId { get; set; }
     
-    public string Name { get; private set; }
+    public string Name { get; private set; } = null!;
     
-    public string PasswordHash { get; private set; }
+    public string PasswordHash { get; private set; } = null!;
     
-    public UserRole Role { get; private set; }
+    public UserRole Role { get; private set; } = null!;
 
-    public Tenant Tenant { get; private set; }
+    public Tenant Tenant { get; private set; } = null!;
 
     public DateTime CreatedAt { get; private set; }
 

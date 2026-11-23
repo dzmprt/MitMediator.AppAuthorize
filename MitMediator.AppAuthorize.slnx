@@ -2,12 +2,10 @@
   <Folder Name="/samples/">
     <Project Path="samples/SimpleConsoleApp/SimpleConsoleApp.csproj" />
     <Project Path="samples/SimpleHttpMediatorConsoleApp/SimpleHttpMediatorConsoleApp.csproj" />
-    <Project Path="samples/SimpleWebApiBasicAuth/SimpleWebApiBasicAuth.csproj" />
-    <Project Path="samples/SimpleWebApiJwtAuth/SimpleWebApiJwtAuth.csproj" />
+    <Project Path="samples/SimpleWebApi/SimpleWebApi.csproj" />
   </Folder>
   <Folder Name="/samples/BooksWebApi/">
-    <Project Path="samples/BooksWebApi/Books.WebApi.BasicAuthorize/Books.WebApi.BasicAuthorize.csproj" />
-    <Project Path="samples/BooksWebApi/Books.WebApi.JwtBearerAuthorize/Books.WebApi.JwtBearerAuthorize.csproj" />
+    <Project Path="samples/BooksWebApi/Books.WebApi/Books.WebApi.csproj" />
   </Folder>
   <Folder Name="/samples/BooksWebApi/Core/">
     <Project Path="samples/BooksWebApi/Core/Books.Application/Books.Application.csproj" />

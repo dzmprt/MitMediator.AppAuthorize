@@ -29,6 +29,8 @@ public class AppAuthorizeBehaviorTests
     public async Task HandleAsync_ShouldAllowSuperuserRequest()
     {
         var authContext = new Mock<IAuthenticationContext>();
+        authContext.Setup(a => a.UserId).Returns("userId");
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
         authContext.Setup(a => a.UserRoles).Returns(["Superuser"]);
         var next = new Mock<IRequestHandlerNext<SecuredRequest, string>>();
         next.Setup(n => n.InvokeAsync(It.IsAny<SecuredRequest>(), _cancellationToken)).ReturnsAsync("allowed");
@@ -41,6 +43,29 @@ public class AppAuthorizeBehaviorTests
     }
 
     [Fact]
+    public async Task HandleAsync_ShouldRejectSuperuserRole_WhenUserIsNotAuthenticated()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        authContext.Setup(a => a.UserId).Returns((string?)null);
+        authContext.Setup(a => a.UserRoles).Returns(["Superuser"]);
+        var next = new Mock<IRequestHandlerNext<SecuredRequest, string>>();
+        var behavior = new AppAuthorizeBehavior<SecuredRequest, string>(
+            authContext.Object,
+            new AppAuthorizeConfiguration("Superuser"));
+
+        await Assert.ThrowsAsync<UnauthorizedException>(() =>
+            behavior.HandleAsync(
+                new SecuredRequest(),
+                next.Object,
+                _cancellationToken).AsTask());
+        next.Verify(
+            handler => handler.InvokeAsync(
+                It.IsAny<SecuredRequest>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
     public async Task HandleAsync_ShouldAllowAnonymousRequest_WhenSuperuserRoleIsConfigured()
     {
         var authContext = new Mock<IAuthenticationContext>();
@@ -48,20 +73,6 @@ public class AppAuthorizeBehaviorTests
         next.Setup(n => n.InvokeAsync(It.IsAny<AnonymousRequest>(), _cancellationToken)).ReturnsAsync("allowed");
         var behavior = new AppAuthorizeBehavior<AnonymousRequest, string>(authContext.Object,
             new AppAuthorizeConfiguration("Superuser"));
-
-        var result = await behavior.HandleAsync(new AnonymousRequest(), next.Object, _cancellationToken);
-
-        Assert.Equal("allowed", result);
-    }
-
-    [Fact]
-    public async Task HandleAsync_ShouldAllowAnonymousRequest_WhenConfigurationHasNoSuperuserRole()
-    {
-        var authContext = new Mock<IAuthenticationContext>();
-        var next = new Mock<IRequestHandlerNext<AnonymousRequest, string>>();
-        next.Setup(n => n.InvokeAsync(It.IsAny<AnonymousRequest>(), _cancellationToken)).ReturnsAsync("allowed");
-        var behavior = new AppAuthorizeBehavior<AnonymousRequest, string>(authContext.Object,
-            new AppAuthorizeConfiguration(null));
 
         var result = await behavior.HandleAsync(new AnonymousRequest(), next.Object, _cancellationToken);
 
@@ -90,6 +101,7 @@ public class AppAuthorizeBehaviorTests
         // Arrange
         var authContext = new Mock<IAuthenticationContext>();
         authContext.Setup(a => a.UserId).Returns("userId");
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
 
         var next = new Mock<IRequestHandlerNext<SecuredRequest, string>>();
         next.Setup(n => n.InvokeAsync(It.IsAny<SecuredRequest>(), _cancellationToken))
@@ -110,6 +122,7 @@ public class AppAuthorizeBehaviorTests
         // Arrange
         var authContext = new Mock<IAuthenticationContext>();
         authContext.Setup(a => a.UserId).Returns("userId");
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
         authContext.Setup(a => a.UserRoles).Returns(["user"]);
         authContext.Setup(a => a.TenantIds).Returns(["Tenant1"]);
 
@@ -130,6 +143,7 @@ public class AppAuthorizeBehaviorTests
         // Arrange
         var authContext = new Mock<IAuthenticationContext>();
         authContext.Setup(a => a.UserId).Returns("userId");
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
         authContext.Setup(a => a.UserRoles).Returns(["Admin"]);
         authContext.Setup(a => a.TenantIds).Returns(["123"]);
 
@@ -150,6 +164,7 @@ public class AppAuthorizeBehaviorTests
         // Arrange
         var authContext = new Mock<IAuthenticationContext>();
         authContext.Setup(a => a.UserId).Returns("userId");
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
         authContext.Setup(a => a.UserRoles).Returns(["Admin"]);
         authContext.Setup(a => a.TenantIds).Returns(["Tenant1"]);
 
@@ -171,6 +186,7 @@ public class AppAuthorizeBehaviorTests
     {
         var authContext = new Mock<IAuthenticationContext>();
         authContext.Setup(a => a.UserId).Returns("userId");
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
         var next = new Mock<IRequestHandlerNext<EmptyAuthorizationRequest, string>>();
         next.Setup(n => n.InvokeAsync(It.IsAny<EmptyAuthorizationRequest>(), _cancellationToken)).ReturnsAsync("success");
         var behavior = new AppAuthorizeBehavior<EmptyAuthorizationRequest, string>(authContext.Object);
@@ -178,6 +194,104 @@ public class AppAuthorizeBehaviorTests
         var result = await behavior.HandleAsync(new EmptyAuthorizationRequest(), next.Object, _cancellationToken);
 
         Assert.Equal("success", result);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldThrowUnauthorized_WhenUserIdIsWhitespace()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        authContext.Setup(a => a.IsAuthenticated).Returns(true);
+        authContext.Setup(a => a.UserId).Returns(" ");
+        var next = new Mock<IRequestHandlerNext<SecuredRequest, string>>();
+        var behavior =
+            new AppAuthorizeBehavior<SecuredRequest, string>(authContext.Object);
+
+        await Assert.ThrowsAsync<UnauthorizedException>(() =>
+            behavior.HandleAsync(
+                new SecuredRequest(),
+                next.Object,
+                _cancellationToken).AsTask());
+        next.Verify(
+            handler => handler.InvokeAsync(
+                It.IsAny<SecuredRequest>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldRejectInheritedAllowAnonymous()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        var next = new Mock<IRequestHandlerNext<DerivedAnonymousRequest, string>>();
+        var behavior =
+            new AppAuthorizeBehavior<DerivedAnonymousRequest, string>(
+                authContext.Object);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            behavior.HandleAsync(
+                new DerivedAnonymousRequest(),
+                next.Object,
+                _cancellationToken).AsTask());
+        Assert.Contains("cannot be inherited", exception.Message);
+        next.Verify(
+            handler => handler.InvokeAsync(
+                It.IsAny<DerivedAnonymousRequest>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldRejectInheritedRoleRequirements()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        authContext.Setup(context => context.IsAuthenticated).Returns(true);
+        authContext.Setup(context => context.UserId).Returns("user-id");
+        var next =
+            new Mock<IRequestHandlerNext<DerivedRoleRestrictedRequest, string>>();
+        next.Setup(handler => handler.InvokeAsync(
+                It.IsAny<DerivedRoleRestrictedRequest>(),
+                _cancellationToken))
+            .ReturnsAsync("allowed");
+        var behavior =
+            new AppAuthorizeBehavior<DerivedRoleRestrictedRequest, string>(
+                authContext.Object);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            behavior.HandleAsync(
+                new DerivedRoleRestrictedRequest(),
+                next.Object,
+                _cancellationToken).AsTask());
+
+        Assert.Contains("cannot be inherited", exception.Message);
+        next.Verify(
+            handler => handler.InvokeAsync(
+                It.IsAny<DerivedRoleRestrictedRequest>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task HandleAsync_ShouldRejectAnonymousAndAuthorizeAttributes()
+    {
+        var authContext = new Mock<IAuthenticationContext>();
+        var next =
+            new Mock<IRequestHandlerNext<ConflictingAuthorizationRequest, string>>();
+        var behavior =
+            new AppAuthorizeBehavior<ConflictingAuthorizationRequest, string>(
+                authContext.Object);
+
+        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            behavior.HandleAsync(
+                new ConflictingAuthorizationRequest(),
+                next.Object,
+                _cancellationToken).AsTask());
+
+        Assert.Contains("cannot be declared together", exception.Message);
+        next.Verify(
+            handler => handler.InvokeAsync(
+                It.IsAny<ConflictingAuthorizationRequest>(),
+                It.IsAny<CancellationToken>()),
+            Times.Never);
     }
 
     // ====== Fake IRequest types with attributes ======
@@ -205,4 +319,18 @@ public class AppAuthorizeBehaviorTests
     public class EmptyAuthorizationRequest : IRequest<string>
     {
     }
+
+    [AppAllowAnonymous]
+    public class AnonymousBaseRequest : IRequest<string>;
+
+    public class DerivedAnonymousRequest : AnonymousBaseRequest;
+
+    [AppAuthorize(["Admin"])]
+    public class RoleRestrictedBaseRequest : IRequest<string>;
+
+    public class DerivedRoleRestrictedRequest : RoleRestrictedBaseRequest;
+
+    [AppAllowAnonymous]
+    [AppAuthorize(["Admin"])]
+    public class ConflictingAuthorizationRequest : IRequest<string>;
 }

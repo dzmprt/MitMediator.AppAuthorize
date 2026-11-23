@@ -11,6 +11,9 @@ public interface IUserAuthenticator
     /// <param name="username">Username.</param>
     /// <param name="password">Password.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-    /// <returns><see cref="UserInfo"/>.</returns>
-    ValueTask<UserInfo> AuthByPasswordAsync(string username, string password, CancellationToken cancellationToken);
+    /// <returns>The authenticated user, or <see langword="null"/> for invalid credentials.</returns>
+    ValueTask<UserInfo?> AuthByPasswordAsync(
+        string username,
+        string password,
+        CancellationToken cancellationToken);
 }

@@ -11,7 +11,7 @@ public class CreateBookCommand : IRequest<Book>
     /// <summary>
     /// Title.
     /// </summary>
-    public string Title { get; init; }
+    public string Title { get; init; } = null!;
     
     /// <summary>
     /// Author id.
@@ -21,6 +21,6 @@ public class CreateBookCommand : IRequest<Book>
     /// <summary>
     /// Genre.
     /// </summary>
-    public string GenreName { get; init; }
+    public string GenreName { get; init; } = null!;
 
 }

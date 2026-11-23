@@ -19,6 +19,6 @@ public class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
             .HasConversion(userIdConverter)
             .IsRequired();
         
-        builder.Property(e => e.Expired).IsRequired();
+        builder.Property(e => e.ExpiresAt).IsRequired();
     }
 }

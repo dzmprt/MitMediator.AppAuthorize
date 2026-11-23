@@ -10,11 +10,11 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
-      <PackageReference Include="MitMediator.AppAuthorize" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Books.Domain\Books.Domain.csproj" />
+      <ProjectReference Include="..\..\..\..\src\MitMediator.AppAuthorize\MitMediator.AppAuthorize.csproj" />
     </ItemGroup>
 
     <PropertyGroup>

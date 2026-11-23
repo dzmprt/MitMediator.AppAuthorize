@@ -22,7 +22,11 @@ public class AuthenticationContextTests
     [Fact]
     public void IsInRole_ShouldReturnTrue_WhenRoleExists()
     {
-        IAuthenticationContext context = new FakeAuthenticationContext { UserRoles = new[] { "Admin", "User" } };
+        IAuthenticationContext context = new FakeAuthenticationContext
+        {
+            UserId = "user",
+            UserRoles = ["Admin", "User"]
+        };
         Assert.True(context.IsInRole("Admin"));
     }
 
@@ -43,7 +47,11 @@ public class AuthenticationContextTests
     [Fact]
     public void IsInOneOfRoles_ShouldReturnTrue_WhenAnyRoleMatches()
     {
-        IAuthenticationContext context = new FakeAuthenticationContext { UserRoles = new[] { "User", "Manager" } };
+        IAuthenticationContext context = new FakeAuthenticationContext
+        {
+            UserId = "user",
+            UserRoles = ["User", "Manager"]
+        };
         Assert.True(context.IsInOneOfRoles(new[] { "Admin", "Manager" }));
     }
 
@@ -64,7 +72,11 @@ public class AuthenticationContextTests
     [Fact]
     public void IsInTenant_ShouldReturnTrue_WhenTenantExists()
     {
-        IAuthenticationContext context = new FakeAuthenticationContext { TenantIds = new[] { "T1", "T2" } };
+        IAuthenticationContext context = new FakeAuthenticationContext
+        {
+            UserId = "user",
+            TenantIds = ["T1", "T2"]
+        };
         Assert.True(context.IsInTenant("T1"));
     }
 
@@ -85,7 +97,11 @@ public class AuthenticationContextTests
     [Fact]
     public void IsInOneOfTenants_ShouldReturnTrue_WhenAnyTenantMatches()
     {
-        IAuthenticationContext context = new FakeAuthenticationContext { TenantIds = new[] { "T1", "T2" } };
+        IAuthenticationContext context = new FakeAuthenticationContext
+        {
+            UserId = "user",
+            TenantIds = ["T1", "T2"]
+        };
         Assert.True(context.IsInOneOfTenants(new[] { "T3", "T2" }));
     }
 
@@ -108,7 +124,11 @@ public class AuthenticationContextTests
     {
         IAuthenticationContext context = new FakeAuthenticationContext
         {
-            Claims = new Dictionary<string, string> { ["scope"] = "read" }
+            UserId = "user",
+            Claims = new Dictionary<string, IReadOnlyList<string>>
+            {
+                ["scope"] = ["read"]
+            }
         };
         Assert.True(context.HasClaim("scope", "read"));
     }
@@ -118,7 +138,10 @@ public class AuthenticationContextTests
     {
         IAuthenticationContext context = new FakeAuthenticationContext
         {
-            Claims = new Dictionary<string, string> { ["scope"] = "read" }
+            Claims = new Dictionary<string, IReadOnlyList<string>>
+            {
+                ["scope"] = ["read"]
+            }
         };
         Assert.False(context.HasClaim("role", "admin"));
     }
@@ -128,7 +151,10 @@ public class AuthenticationContextTests
     {
         IAuthenticationContext context = new FakeAuthenticationContext
         {
-            Claims = new Dictionary<string, string> { ["scope"] = "write" }
+            Claims = new Dictionary<string, IReadOnlyList<string>>
+            {
+                ["scope"] = ["write"]
+            }
         };
         Assert.False(context.HasClaim("scope", "read"));
     }
@@ -138,5 +164,80 @@ public class AuthenticationContextTests
     {
         IAuthenticationContext context = new FakeAuthenticationContext { Claims = null };
         Assert.False(context.HasClaim("scope", "read"));
+    }
+
+    [Fact]
+    public void DefaultHelpers_ShouldFailClosed_WhenNotAuthenticated()
+    {
+        IAuthenticationContext context = new UnauthenticatedContext
+        {
+            UserRoles = ["Admin"],
+            TenantIds = ["Tenant"],
+            Claims = new Dictionary<string, IReadOnlyList<string>>
+            {
+                ["scope"] = ["read"]
+            }
+        };
+
+        Assert.False(context.IsInRole("Admin"));
+        Assert.False(context.IsInOneOfRoles(["Admin"]));
+        Assert.False(context.IsInTenant("Tenant"));
+        Assert.False(context.IsInOneOfTenants(["Tenant"]));
+        Assert.Empty(context.GetClaimValues("scope"));
+        Assert.False(context.HasClaim("scope", "read"));
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
+    public void DefaultHelpers_ShouldFailClosed_WhenUserIdIsMissing(
+        string? userId)
+    {
+        IAuthenticationContext context = new InvalidUserContext
+        {
+            UserId = userId,
+            UserRoles = ["Admin"],
+            TenantIds = ["Tenant"],
+            Claims = new Dictionary<string, IReadOnlyList<string>>
+            {
+                ["scope"] = ["read"]
+            }
+        };
+
+        Assert.False(context.IsInRole("Admin"));
+        Assert.False(context.IsInOneOfRoles(["Admin"]));
+        Assert.False(context.IsInTenant("Tenant"));
+        Assert.False(context.IsInOneOfTenants(["Tenant"]));
+        Assert.Empty(context.GetClaimValues("scope"));
+        Assert.False(context.HasClaim("scope", "read"));
+    }
+
+    private sealed class InvalidUserContext : IAuthenticationContext
+    {
+        public bool IsAuthenticated => true;
+        public string? UserId { get; init; }
+        public string? UserName => null;
+        public string[]? UserRoles { get; init; }
+        public IReadOnlyDictionary<string, IReadOnlyList<string>>? Claims
+        {
+            get;
+            init;
+        }
+        public string[]? TenantIds { get; init; }
+    }
+
+    private sealed class UnauthenticatedContext : IAuthenticationContext
+    {
+        public bool IsAuthenticated => false;
+        public string? UserId => null;
+        public string? UserName => null;
+        public string[]? UserRoles { get; init; }
+        public IReadOnlyDictionary<string, IReadOnlyList<string>>? Claims
+        {
+            get;
+            init;
+        }
+        public string[]? TenantIds { get; init; }
     }
 }

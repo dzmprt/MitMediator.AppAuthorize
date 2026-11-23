@@ -20,11 +20,10 @@ public static class DependencyInjection
     /// <returns><see cref="IServiceProvider"/></returns>
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services)
     {
-        var connection = new SqliteConnection("Data Source=:memory:");
-        connection.Open();
-        return services.AddDbContext<DbContext, ApplicationDbContext>(options =>
+        services.AddSingleton<InMemoryDatabase>();
+        return services.AddDbContext<DbContext, ApplicationDbContext>((provider, options) =>
             {
-                options.UseSqlite(connection);
+                options.UseSqlite(provider.GetRequiredService<InMemoryDatabase>().ConnectionString);
             })
             .AddTransient(typeof(IBaseProvider<>), typeof(BaseProvider<>))
             .AddTransient(typeof(IBaseRepository<>), typeof(BaseRepository<>))
@@ -34,5 +33,29 @@ public static class DependencyInjection
     public static IServiceCollection AddPasswordHasher(this IServiceCollection services)
     {
         return services.AddTransient<IPasswordHasher, PasswordHasher>();
+    }
+
+    private sealed class InMemoryDatabase : IDisposable
+    {
+        private readonly SqliteConnection _keepAlive;
+
+        public InMemoryDatabase()
+        {
+            ConnectionString = new SqliteConnectionStringBuilder
+            {
+                DataSource = $"books-{Guid.NewGuid():N}",
+                Mode = SqliteOpenMode.Memory,
+                Cache = SqliteCacheMode.Shared,
+                Pooling = false
+            }.ToString();
+
+            // Keep the database alive without sharing a connection between contexts.
+            _keepAlive = new SqliteConnection(ConnectionString);
+            _keepAlive.Open();
+        }
+
+        public string ConnectionString { get; }
+
+        public void Dispose() => _keepAlive.Dispose();
     }
 }

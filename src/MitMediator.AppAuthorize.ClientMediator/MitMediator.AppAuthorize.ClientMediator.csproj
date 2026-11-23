@@ -7,7 +7,7 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Title>MitMediator.AppAuthorize.ClientMediator</Title>
         <Authors>Dmitry Protko</Authors>
-        <Description>Extension for MitMediator.AutoApi.HttpMediator that enables JWT Bearer authorization. Use the extension methods IClientMediator.GetJwtBearerTokenAsync and IClientMediator.GetJwtBearerTokenByRefreshAsync to retrieve a JWT token from the server, provided the server is configured with MitMediator.AppAuthorize.Web.</Description>
+        <Description>Extension for MitMediator.AutoApi.HttpMediator with token helpers. Use GetJwtByPasswordAsync, GetJwtByCodeAsync, and GetJwtByRefreshAsync to retrieve authorization tokens from a server configured with MitMediator.AppAuthorize.Web.</Description>
         <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>

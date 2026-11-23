@@ -8,14 +8,14 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <OutputType>Library</OutputType>
         <Version>10.0.1-rc-3</Version>
-        <Description>Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</Description>
+        <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
         <PackageReleaseNotes>v10.0.1-rc-3
 - Update references</PackageReleaseNotes>
         <Title>MitMediator.AppAuthorize.Web</Title>
         <Authors>Dmitry Protko</Authors>
         <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
-        <PackageTags>mitmediator;authorize;jwt;basic;auth;</PackageTags>
+        <PackageTags>mitmediator;authorize;auth;</PackageTags>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -24,7 +24,6 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-      <PackageReference Include="MitMediator.AppAuthorize" />
     </ItemGroup>
 
     <ItemGroup>
@@ -42,4 +41,7 @@
     <ItemGroup>
         <None Include="..\..\LICENSE" Pack="true" PackagePath="\"/>
     </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../MitMediator.AppAuthorize/MitMediator.AppAuthorize.csproj" />
+  </ItemGroup>
 </Project>

@@ -5,5 +5,8 @@ namespace MitMediator;
 /// Use this attribute to mark classes or structs that
 /// can be accessed without authentication.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+[AttributeUsage(
+    AttributeTargets.Class | AttributeTargets.Struct,
+    AllowMultiple = false,
+    Inherited = false)]
 public  class AppAllowAnonymousAttribute : Attribute;
