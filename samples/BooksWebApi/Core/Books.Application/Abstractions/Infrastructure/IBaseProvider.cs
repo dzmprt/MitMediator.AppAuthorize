@@ -27,7 +27,7 @@ public interface IBaseProvider<TEntity>
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
     /// <returns>The first entity matching the predicate, or null if not found.</returns>
-    ValueTask<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken);
+    ValueTask<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken);
     
     /// <summary>
     /// Search entities.

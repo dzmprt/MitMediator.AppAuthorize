@@ -5,7 +5,7 @@ namespace MitMediator.AppAuthorize.ClientMediator;
 
 [Pattern("auth/by-refresh")]
 [Method(MethodType.Post)]
-public class CreateJwtByRefreshTokenCommand : IRequest<JwtTokenModel>
+public sealed class CreateJwtByRefreshTokenCommand : IRequest<JwtTokenModel>
 {
     public string RefreshTokenKey { get; init; } = null!;
 

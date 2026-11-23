@@ -1,10 +1,20 @@
 namespace MitMediator.AppAuthorize.Web.Models;
 
-internal class JwtTokenModel
+internal sealed class JwtTokenModel
 {
-    public string JwtToken { get; set; } = null!;
+    public JwtTokenModel(
+        string jwtToken,
+        string? refreshToken = null,
+        DateTimeOffset? refreshTokenExpires = null)
+    {
+        JwtToken = jwtToken;
+        RefreshToken = refreshToken;
+        RefreshTokenExpires = refreshTokenExpires;
+    }
 
-    public string RefreshToken { get; set; } = null!;
-    
-    public DateTime RefreshTokenExpires  { get; set; }
+    public string JwtToken { get; }
+
+    public string? RefreshToken { get; }
+
+    public DateTimeOffset? RefreshTokenExpires { get; }
 }

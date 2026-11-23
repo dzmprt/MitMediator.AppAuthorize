@@ -48,7 +48,7 @@ public class BaseProvider<TEntity> : IBaseProvider<TEntity> where TEntity : clas
 
     /// <inheritdoc/>
     /// <returns>The first entity matching the predicate, or null if not found.</returns>
-    public async ValueTask<TEntity> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken)
+    public async ValueTask<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>>? predicate, CancellationToken cancellationToken)
     {
         if (predicate is null)
         {

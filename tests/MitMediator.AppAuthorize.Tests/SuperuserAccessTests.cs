@@ -4,6 +4,10 @@ using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Exceptions;
 using MitMediator.AppAuthorize.Tests;
 
+[CollectionDefinition(nameof(SuperuserStateCollection), DisableParallelization = true)]
+public sealed class SuperuserStateCollection;
+
+[Collection(nameof(SuperuserStateCollection))]
 public class SuperuserAccessTests
 {
     [Fact]
@@ -24,13 +28,14 @@ public class SuperuserAccessTests
     public async Task SuperuserRole_AllowsAccessToAnyRequest()
     {
         // Arrange
-        SuperuserRoleName.Value = "super";
         var context = new FakeAuthenticationContext
         {
             UserId = "1",
             UserRoles = new[] { "super" }
         };
-        var behavior = new AppAuthorizeBehavior<DummyRequest, string>(context);
+        var behavior = new AppAuthorizeBehavior<DummyRequest, string>(
+            context,
+            new AppAuthorizeConfiguration("super"));
         var nextCalled = false;
         var next = new DummyNextHandler<string>(() => { nextCalled = true; return new ValueTask<string>("ok"); });
         var result = await behavior.HandleAsync(new DummyRequest(), next, CancellationToken.None);
@@ -43,20 +48,21 @@ public class SuperuserAccessTests
     public async Task SuperuserRole_DeniedAccessToAppAuthorizeRequestWithOtherRole()
     {
         // Arrange
-        SuperuserRoleName.Value = "super";
         var context = new FakeAuthenticationContext
         {
             UserId = "1",
             UserRoles = new[] { "notsuper" }
         };
-        var behavior = new AppAuthorizeBehavior<DummyRequest, string>(context);
+        var behavior = new AppAuthorizeBehavior<DummyRequest, string>(
+            context,
+            new AppAuthorizeConfiguration("super"));
         var next = new DummyNextHandler<string>(() => new ValueTask<string>("ok"));
         
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ForbiddenException>(async () => await behavior.HandleAsync(new DummyRequest(), next, CancellationToken.None)) ;
         Assert.Equal("User must possess at least one of the required roles: TestRole.", exception.Message);
     }
-    
+
     [AppAuthorize(["TestRole"])]
     private class DummyRequest : IRequest<string> { }
     private class DummyNextHandler<T> : IRequestHandlerNext<DummyRequest, T>

@@ -8,34 +8,28 @@ namespace MitMediator.AppAuthorize;
 public interface IRefreshTokenRepository 
 {
     /// <summary>
-    /// Add refresh token.
+    /// Atomically creates and persists a refresh token.
     /// </summary>
-    /// <param name="refreshToken">Refresh token to add.</param>
+    /// <param name="userId">User identifier associated with the token.</param>
+    /// <param name="expiresAt">Expiration date and time of the token.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-    /// <returns>The added refresh token.</returns>
-    ValueTask<RefreshToken> AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken);
-    
-    /// <summary>
-    /// Delete refresh token.
-    /// </summary>
-    /// <param name="refreshTokenKey">Refresh token id to get.</param>
-    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-    /// <returns>The refresh token object.</returns>
-    ValueTask<RefreshToken?> GetOrDefaultAsync(string refreshTokenKey, CancellationToken cancellationToken);
+    /// <returns>The persisted refresh token.</returns>
+    ValueTask<RefreshToken> AddAsync(
+        string userId,
+        DateTimeOffset expiresAt,
+        CancellationToken cancellationToken);
 
     /// <summary>
-    /// Delete refresh token.
+    /// Atomically validates and consumes a refresh token, then persists its replacement.
     /// </summary>
-    /// <param name="entity">Refresh token to delete.</param>
+    /// <param name="refreshTokenKey">Refresh token key.</param>
+    /// <param name="userId">Expected token owner.</param>
+    /// <param name="newTokenExpiration">Expiration of the replacement token.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-    /// <returns>A task that represents the asynchronous remove operation.</returns>
-    ValueTask RemoveAsync(RefreshToken entity, CancellationToken cancellationToken);
-
-    /// <summary>
-    /// Delete refresh token.
-    /// </summary>
-    /// <param name="refreshToken">Refresh token to add.</param>
-    /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-    /// <returns>The refresh token object.</returns>
-    ValueTask<UserInfo?> GetUserInfoByTokenOrDefaultAsync(RefreshToken refreshToken, CancellationToken cancellationToken);
+    /// <returns>The replacement token and its user, or <see langword="null"/> if the token is invalid.</returns>
+    ValueTask<RefreshTokenRotation?> RotateAsync(
+        string refreshTokenKey,
+        string userId,
+        DateTimeOffset newTokenExpiration,
+        CancellationToken cancellationToken);
 }

@@ -7,15 +7,19 @@
         <LangVersion>14</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <OutputType>Library</OutputType>
-        <Version>10.0.1-rc-3</Version>
-        <Description>Extension for MitMediator that simplifies authentication and authorization via basic auth or JWT bearer tokens</Description>
-        <PackageReleaseNotes>v10.0.1-rc-3
-- Update references</PackageReleaseNotes>
+        <Version>10.0.1-rc-4</Version>
+        <PackageReleaseNotes>v10.0.1-rc-4
+- Validate authorization metadata at startup and deny access when user identity is missing
+- Scope the superuser role to the service provider
+- Breaking: update the refresh-token repository contract to support atomic rotation
+- Breaking: remove built-in HTTP Basic authentication support from the Web package
+        </PackageReleaseNotes>
+        <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
         <Title>MitMediator.AppAuthorize.Web</Title>
         <Authors>Dmitry Protko</Authors>
         <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
-        <PackageTags>mitmediator;authorize;jwt;basic;auth;</PackageTags>
+        <PackageTags>mitmediator;authorize;auth;</PackageTags>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -23,8 +27,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
-      <PackageReference Include="MitMediator.AppAuthorize" />
+        <PackageReference Include="MitMediator.AppAuthorize" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     </ItemGroup>
 
     <ItemGroup>
