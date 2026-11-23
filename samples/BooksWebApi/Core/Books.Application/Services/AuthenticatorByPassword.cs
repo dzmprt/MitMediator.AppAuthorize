@@ -1,26 +1,25 @@
 using Books.Application.Abstractions.Infrastructure;
 using Books.Domain;
 using MitMediator.AppAuthorize;
-using MitMediator.AppAuthorize.Exceptions;
 
 namespace Books.Application.Services;
 
 public class AuthenticatorByPassword(IBaseProvider<User> userProvider, IPasswordHasher passwordHasher)
     : IUserAuthenticator
 {
-    public async ValueTask<UserInfo> AuthByPasswordAsync(string username, string password,
+    public async ValueTask<UserInfo?> AuthByPasswordAsync(string username, string password,
         CancellationToken cancellationToken)
     {
         var normalizedName = username?.ToUpperInvariant().Trim();
         var user = await userProvider.FirstOrDefaultAsync(u => u.Name == normalizedName, cancellationToken);
         if (user == null)
         {
-            throw new ForbiddenException("Invalid username.");
+            return null;
         }
 
         if (!passwordHasher.VerifyHash(password, user.PasswordHash))
         {
-            throw new ForbiddenException("Invalid password.");
+            return null;
         }
 
         return new UserInfo(

@@ -13,7 +13,7 @@ public record UserRole
     /// <summary>
     /// User role name.
     /// </summary>
-    public string Role { get; private set; }
+    public string Role { get; private set; } = null!;
 
     private UserRole(){}
     

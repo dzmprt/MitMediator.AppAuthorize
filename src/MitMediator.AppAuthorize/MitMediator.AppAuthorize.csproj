@@ -6,23 +6,27 @@
         <Nullable>enable</Nullable>
         <LangVersion>14</LangVersion>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Version>10.0.1-rc-3</Version>
-        <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
-        <PackageReleaseNotes>v10.0.1-rc-3
-- Update references
+        <Version>10.0.1-rc-4</Version>
+        <PackageReleaseNotes>v10.0.1-rc-4
+- Validate authorization metadata at startup and deny access when user identity is missing
+- Scope the superuser role to the service provider
+- Breaking: update the refresh-token repository contract to support atomic rotation
+- Breaking: remove built-in HTTP Basic authentication support from the Web package
         </PackageReleaseNotes>
+        <Description>Extension for MitMediator that simplifies authentication and authorization</Description>
         <Title>MitMediator.AppAuthorize</Title>
         <Authors>Dmitry Protko</Authors>
         <PackageProjectUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</PackageProjectUrl>
         <PackageIcon>logo.png</PackageIcon>
         <RepositoryUrl>https://github.com/dzmprt/MitMediator.AppAuthorize</RepositoryUrl>
-        <PackageTags>mitmediator;authorize;jwt;basic;auth;</PackageTags>
+        <PackageTags>mitmediator;authorize;auth;</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MitMediator" />
+        <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     </ItemGroup>
     
 

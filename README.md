@@ -4,115 +4,68 @@
 
 # MitMediator.AppAuthorize
 
-## Extension for [MitMediator](https://github.com/dzmprt/MitMediator) that simplifies authentication and authorization via basic auth or JWT bearer tokens
+## Extension for [MitMediator](https://github.com/dzmprt/MitMediator) that simplifies authentication and authorization
 
-- [Installation for jwt bearer auth](#installation-for-jwt-bearer-auth)
-- [Installation for basic auth](#installation-for-basic-auth)
+- [Installation](#installation)
 - [How to use](#how-to-use)
-- [Example of web api with jwt bearer auth](#example-of-web-api-with-jwt-bearer-auth-by-login-and-password)
+- [Additional settings](#additional-settings)
+- [Example of web API with login and password](#example-of-web-api-with-login-and-password)
 - [Extension for HttpMediator](#extension-for-httpmediator)
 - [Samples](./samples)
 - [License](LICENSE)
 
-## Installation for jwt bearer auth
+## Installation
 
 ### 1. Add package
 
 ```bash
 # for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc-3
+dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc-4
 
 # for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc-3
+dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc-4
 ```
 
-### 2. Inject services for application layer
+### 2. Register application services
 
 ```csharp
 // Register handlers and IMediator
-services.AddMitMediator();
+builder.Services.AddMitMediator();
 
-// Register authorization pipe
-services.AddAppAuthorize();
+// Register the authorization pipeline
+builder.Services.AddAppAuthorize();
 
 // Inject IUserAuthenticator implementation
 builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
-
-// Or/and inject IUserAuthenticatorByCode implementation
-// if you won't use some code for sing-in (form sms, email, etc)
-// builder.Services.AddScoped<IUserAuthenticatorByCode, UserAuthenticatorByCode>();
 
 // Inject IRefreshTokenRepository implementation
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 ```
 
-### 3. Inject services for web layer
+### 3. Register web services
 
 ```csharp
 // Add default auth context (or implement and inject IAuthenticationContext)
 builder.Services.AddDefaultAuthContext();
 
 // Add auth services and configure TokenValidationParameters
-builder.Services.AddJwtAuthServices("your-secure-key-here");
+builder.Services.AddJwtAuthServices(signingKey, "my-api", "my-api-client");
 ```
 
-### 4. Map jwt endpoints
+### 4. Configure middleware
+
+```csharp
+//Optional: Behavior for mapping custom auth exceptions to correct http status response: Unauthorized - 401, Forbidden - 403
+app.UseAuthException();
+
+app.UseAuthentication();
+app.UseAuthorization();
+```
+
+### 5. Map authentication endpoints
 
 ```csharp
 app.MapAuthApi();
-```
-
-### 5. (Optional) Use middleware to handle auth exceptions
-
-```csharp
-// Unauthorized - 401, Forbidden - 403
-app.UseAuthException();
-```
-
-## Installation for basic auth
-
-### 1. Add package
-
-```bash
-# for application layer
-dotnet add package MitMediator.AppAuthorize -v 10.0.1-rc-3
-
-# for ASP.NET projects
-dotnet add package MitMediator.AppAuthorize.Web -v 10.0.1-rc-3
-```
-
-### 2. Inject services for application layer
-
-```csharp
-// Register handlers and IMediator
-services.AddMitMediator();
-
-// Register authorization pipe
-services.AddAppAuthorize();
-
-// Inject IUserAuthenticator implementation
-builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
-```
-
-### 3. Inject services for web layer
-
-```csharp
-// Add default auth context (or implement and inject IAuthenticationContext)
-builder.Services.AddDefaultAuthContext();
-
-````
-
-### 4. Use basic auth middleware
-
-```csharp
-app.UseBasicAuth();
-```
-
-### 5. (Optional) Use middleware to handle auth exceptions
-
-```csharp
-// Unauthorized - 401, Forbidden - 403
-app.UseAuthException();
 ```
 
 ## How to use
@@ -141,149 +94,216 @@ public class GetAuthStatusQueryHandler(IAuthenticationContext authenticationCont
 }
 ```
 
-You can add a superuser role for an admin or the system:
+## Additional settings
+
+**Change the route prefix** from the default /auth:
+
 ```csharp
-    services.AddAppAuthorize("admin");
+app.MapAuthApi(routePrefix: "identity");
 ```
 
-> Instead of a refresh token key, you may use any alternative code, such as a one-time code received via **SMS** or **email**.  
-To support this logic, implement the `IUserAuthenticatorByCode`.
-
-## Example of web api with jwt bearer auth by login and password
+**Enable code sign-in** alongside or instead of password sign-in. Register your implementation before building the app:
 
 ```csharp
-using System.Collections.Concurrent;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.OpenApi;
+builder.Services.AddScoped<IUserAuthenticatorByCode, UserAuthenticatorByCode>();
+```
+
+To keep both methods:
+
+```csharp
+app.MapAuthApi(useCode: true);
+```
+
+For code sign-in only, omit the `IUserAuthenticator` registration and use:
+
+```csharp
+app.MapAuthApi(usePassword: false, useCode: true);
+```
+
+**Disable refresh tokens** and omit the `IRefreshTokenRepository` registration:
+
+```csharp
+app.MapAuthApi(useRefreshToken: false);
+```
+
+You can add a superuser role for an admin or the system:
+```csharp
+services.AddAppAuthorize("admin");
+```
+
+To enable rate limiting, pass a registered policy name to `MapAuthApi`, for example `"auth"`:
+
+```csharp
+app.UseRateLimiter();
+
+app.MapAuthApi(rateLimitPolicy: "auth");
+```
+
+## Example of web API with login and password
+
+This local example uses in-memory SQLite. For rate limiting and Swagger, see [SimpleWebApi](./samples/SimpleWebApi).
+
+```csharp
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.Data.Sqlite;
 using MitMediator;
 using MitMediator.AppAuthorize;
 using MitMediator.AppAuthorize.Domain;
 using MitMediator.AppAuthorize.Web;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHttpContextAccessor();
 
 // Add MitMediator
 builder.Services.AddMitMediator();
-
+// Authorization pipline behavior
+builder.Services.AddAppAuthorize();
 // Add default auth context
 builder.Services.AddDefaultAuthContext();
 // Inject IUserAuthenticator implementation
 builder.Services.AddScoped<IUserAuthenticator, UserAuthenticator>();
 // Inject IRefreshTokenRepository implementation
 builder.Services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-// Authorization pipline behavior
-builder.Services.AddAppAuthorize();
 // Auth and jwt services
-builder.Services.AddJwtAuthServices("key1234567890098765433123123123232323");
-
-// Add jwt auth to swagger (use Swashbuckle.AspNetCore and Swashbuckle.AspNetCore.SwaggerUI)
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Description = "Username: <b>test</b>, Password: <b>test</b>",
-    });
-        
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Description = """
-                      JWT Authorization header using the Bearer scheme. \r\n\r\n
-                                            Enter 'Bearer' [space] and then your token in the text input below.
-                                            \r\n\r\nExample: 'Bearer 12345abcdef'
-                      """,
-        Name = "Authorization",
-        In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer"
-    });
-
-    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-    {
-        [new OpenApiSecuritySchemeReference("Bearer", document)] = []
-    });
-});
+builder.Services.AddJwtAuthServices(
+    "JwtSigningKey1234567890098765433123123123232323",
+    "sample-api",
+    "sample-api-client");
 
 var app = builder.Build();
 
-// Handle auth exceptions(Forbidden, Unauthorized)
-app.UseAuthException();
+// Keep the in-memory database alive while the app runs.
+using var keepAlive = new SqliteConnection(RefreshTokenRepository.ConnectionString);
+keepAlive.Open();
+RefreshTokenRepository.InitializeDatabase(keepAlive);
 
+app.UseAuthException();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseSwagger();
-app.UseSwaggerUI();
-
-// Map jwt endpoints
 app.MapAuthApi();
-
-app.MapGet("/auth-status",
-    async ([FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
-        await mediator.SendAsync<GetAuthStatusQuery, bool>(new GetAuthStatusQuery(), cancellationToken));
-
-
-app.MapGet("/test",
-    async ([FromServices] IMediator mediator,
-            CancellationToken cancellationToken) =>
-        await mediator.SendAsync(new GetTestQuery(), cancellationToken));
-
+app.MapGet("/auth-status", (IMediator mediator, CancellationToken cancellationToken) =>
+    mediator.SendAsync<GetAuthStatusQuery, bool>(new GetAuthStatusQuery(), cancellationToken));
 app.Run();
+```
 
+<details>
+<summary>Demo authenticator, SQLite repository, and request handler</summary>
+
+Add these types below the startup code:
+
+```csharp
 
 // Implement IUserAuthenticator for sign-in logic
 public class UserAuthenticator : IUserAuthenticator
 {
-    public ValueTask<UserInfo> AuthByPasswordAsync(string username, string password,
+    internal const string DemoUserId = "testId";
+
+    internal static UserInfo CreateDemoUser() => new(DemoUserId, "test");
+
+    public ValueTask<UserInfo?> AuthByPasswordAsync(string username, string password,
         CancellationToken cancellationToken)
     {
         if (username == "test" && password == "test")
-            return ValueTask.FromResult(new UserInfo("testId", "test"));
+            return ValueTask.FromResult<UserInfo?>(CreateDemoUser());
 
-        throw new ForbiddenException();
+        return ValueTask.FromResult<UserInfo?>(null);
     }
 }
 
 // Implement IRefreshTokenRepository
 public class RefreshTokenRepository : IRefreshTokenRepository
 {
-    private static readonly ConcurrentDictionary<string, RefreshToken> _concurrentDictionary = new();
+    internal const string ConnectionString =
+        "Data Source=refresh-tokens;Mode=Memory;Cache=Shared;Pooling=False";
 
-    public ValueTask<RefreshToken> AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+    public static void InitializeDatabase(SqliteConnection connection)
     {
-        refreshToken.RefreshTokenKey = Guid.NewGuid().ToString();
-        if (!_concurrentDictionary.TryAdd(refreshToken.RefreshTokenKey, refreshToken))
+        using var command = connection.CreateCommand();
+        command.CommandText = """
+            CREATE TABLE IF NOT EXISTS RefreshTokens (
+                TokenHash TEXT NOT NULL PRIMARY KEY,
+                UserId TEXT NOT NULL,
+                ExpiresAtUtcTicks INTEGER NOT NULL
+            );
+            """;
+        command.ExecuteNonQuery();
+    }
+
+    public ValueTask<RefreshToken> AddAsync(
+        string userId,
+        DateTimeOffset expiresAt,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        using var transaction = connection.BeginTransaction(deferred: false);
+        var token = InsertToken(connection, transaction, userId, expiresAt);
+        cancellationToken.ThrowIfCancellationRequested();
+        transaction.Commit();
+        return ValueTask.FromResult(token);
+    }
+
+    public ValueTask<RefreshTokenRotation?> RotateAsync(
+        string refreshTokenKey,
+        string userId,
+        DateTimeOffset newTokenExpiration,
+        CancellationToken cancellationToken)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        if (userId != UserAuthenticator.DemoUserId)
         {
-            throw new Exception("Add refresh token error.");
+            return ValueTask.FromResult<RefreshTokenRotation?>(null);
         }
 
-        return ValueTask.FromResult(refreshToken);
-    }
-
-    public ValueTask<RefreshToken?> GetOrDefaultAsync(string RefreshTokenKey, CancellationToken cancellationToken)
-    {
-        _concurrentDictionary.TryGetValue(RefreshTokenKey, out var value);
-        return ValueTask.FromResult(value);
-    }
-
-    public ValueTask RemoveAsync(RefreshToken entity, CancellationToken cancellationToken)
-    {
-        _concurrentDictionary.TryRemove(entity.RefreshTokenKey, out var value);
-        return ValueTask.CompletedTask;
-    }
-
-    public ValueTask<UserInfo?> GetUserInfoByTokenOrDefaultAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
-    {
-        _concurrentDictionary.TryGetValue(refreshToken.RefreshTokenKey, out var token);
-        if (token is null)
+        using var connection = new SqliteConnection(ConnectionString);
+        connection.Open();
+        using var transaction = connection.BeginTransaction(deferred: false);
+        using var consume = connection.CreateCommand();
+        consume.Transaction = transaction;
+        consume.CommandText = """
+            DELETE FROM RefreshTokens
+            WHERE TokenHash = $hash AND UserId = $userId AND ExpiresAtUtcTicks > $now;
+            """;
+        consume.Parameters.AddWithValue("$hash", HashToken(refreshTokenKey));
+        consume.Parameters.AddWithValue("$userId", userId);
+        consume.Parameters.AddWithValue("$now", DateTimeOffset.UtcNow.UtcTicks);
+        if (consume.ExecuteNonQuery() != 1)
         {
-            return ValueTask.FromResult<UserInfo?>(null);
+            return ValueTask.FromResult<RefreshTokenRotation?>(null);
         }
-        
-        return ValueTask.FromResult<UserInfo?>(new UserInfo(token.UserId, token.UserId));
+
+        var replacement = InsertToken(connection, transaction, userId, newTokenExpiration);
+        cancellationToken.ThrowIfCancellationRequested();
+        transaction.Commit();
+        return ValueTask.FromResult<RefreshTokenRotation?>(
+            new RefreshTokenRotation(UserAuthenticator.CreateDemoUser(), replacement));
     }
+
+    private static RefreshToken InsertToken(
+        SqliteConnection connection,
+        SqliteTransaction transaction,
+        string userId,
+        DateTimeOffset expiresAt)
+    {
+        var key = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+        using var insert = connection.CreateCommand();
+        insert.Transaction = transaction;
+        insert.CommandText = """
+            INSERT INTO RefreshTokens (TokenHash, UserId, ExpiresAtUtcTicks)
+            VALUES ($hash, $userId, $expiresAt);
+            """;
+        insert.Parameters.AddWithValue("$hash", HashToken(key));
+        insert.Parameters.AddWithValue("$userId", userId);
+        insert.Parameters.AddWithValue("$expiresAt", expiresAt.UtcTicks);
+        insert.ExecuteNonQuery();
+        return new RefreshToken(key, userId, expiresAt);
+    }
+
+    private static string HashToken(string key) =>
+        Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(key)));
 }
 
 
@@ -297,37 +317,41 @@ public class GetAuthStatusQueryHandler(IAuthenticationContext authenticationCont
         ValueTask.FromResult(authenticationContext.IsAuthenticated);
 }
 
-public class GetTestQuery : IRequest;
-
-public class GetTestQueryHandler : IRequestHandler<GetTestQuery>
-{
-    public ValueTask<Unit> HandleAsync(GetTestQuery request, CancellationToken cancellationToken) =>
-        ValueTask.FromResult(Unit.Value);
-}
 ```
+
+</details>
 
 # Extension for HttpMediator
 
-Extension for `MitMediator.AutoApi.HttpMediator` that enables JWT Bearer authorization
+Extension for `MitMediator.AutoApi.HttpMediator` with helpers for authorization tokens
 
 ### 1. Add package
 
 ```bash
-dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.1-rc-3
+dotnet add package MitMediator.AppAuthorize.ClientMediator -v 10.0.1-rc-4
 ```
 
 ### 2. Use extension methods
 
 ```csharp
-// Get jwt token by login and password
-var jwtToken = await httpMediator.GetJwtByPasswordAsync("test", "test", CancellationToken.None);
+// Get a token by login and password
+var token = await httpMediator.GetJwtByPasswordAsync("test", "test");
 
-// Get jwt token by code
-var jwtTokenByCode = await httpMediator.GetJwtByCodeAsync("test", "test", CancellationToken.None);
+// Get a token by code
+var tokenByCode = await httpMediator.GetJwtByCodeAsync("test", "test");
 
-// Get jwt token by refresh token key
-var jwtByRefreshToken = await httpMediator.GetJwtByRefreshAsync(jwtToken.UserId, jwtToken.RefreshToken, CancellationToken.None);
+// Get a token by refresh token key
+var refreshedToken = await httpMediator.GetJwtByRefreshAsync(
+    token.UserId,
+    token.RefreshToken!);
+
+// The server and client can use a custom auth route prefix
+var tokenByCustomPrefix = await httpMediator.GetJwtByPasswordAsync(
+    "test",
+    "test",
+    routePrefix: "api/identity");
 ```
 
+The client decodes JWTs for convenience; the server validates them.
 
 ### [See more samples](./samples)

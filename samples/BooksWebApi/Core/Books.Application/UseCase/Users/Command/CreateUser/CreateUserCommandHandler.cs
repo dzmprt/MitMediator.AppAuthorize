@@ -39,7 +39,17 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
     {
         var tenant = await _tenantsProvider.FirstOrDefaultAsync(null, cancellationToken);
         var userRole = await _userRoleProvider.FirstOrDefaultAsync(null, cancellationToken);
-        var newUser = new User(request.Name, _passwordHasher.GetHash(request.Password), userRole!, tenant);
+        if (tenant is null || userRole is null)
+        {
+            throw new InvalidOperationException(
+                "A tenant and user role must be initialized before creating users.");
+        }
+
+        var newUser = new User(
+            request.Name,
+            _passwordHasher.GetHash(request.Password),
+            userRole,
+            tenant);
         await _usersRepository.AddAsync(newUser, cancellationToken);
         return newUser;
     }

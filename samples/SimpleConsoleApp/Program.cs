@@ -114,10 +114,15 @@ public class NoAttributeRequestHandler: IRequestHandler<NoAttributeRequest, stri
 
 public class AuthenticationContext : IAuthenticationContext
 {
+    public bool IsAuthenticated => true;
     public string? UserId => "123";
     public string? UserName => "testuser";
-    public string[]? UserRoles => Claims?.Where(c => c.Key == "role").Select(c => c.Value).ToArray();
-    public Dictionary<string, string>? Claims => new() { { "tenant", "test-tenant" }, { "role", "user" } };
-    public string[]? TenantIds => Claims?.Where(c => c.Key == "tenant").Select(c => c.Value).ToArray();
+    public string[]? UserRoles => Claims?["role"].ToArray();
+    public IReadOnlyDictionary<string, IReadOnlyList<string>>? Claims => new Dictionary<string, IReadOnlyList<string>>
+    {
+        ["tenant"] = ["test-tenant"],
+        ["role"] = ["user"]
+    };
+    public string[]? TenantIds => Claims?["tenant"].ToArray();
 }
 

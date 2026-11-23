@@ -11,6 +11,9 @@ public interface IUserAuthenticatorByCode
     /// <param name="username">Username.</param>
     /// <param name="code">Code.</param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/>.</param>
-    /// <returns><see cref="UserInfo"/>.</returns>
-    ValueTask<UserInfo> AuthByCodeAsync(string username, string code, CancellationToken cancellationToken);
+    /// <returns>The authenticated user, or <see langword="null"/> for an invalid code.</returns>
+    ValueTask<UserInfo?> AuthByCodeAsync(
+        string username,
+        string code,
+        CancellationToken cancellationToken);
 }

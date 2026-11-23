@@ -13,7 +13,7 @@ public record Genre
     /// <summary>
     /// Genre name.
     /// </summary>
-    public string GenreName { get; private set; }
+    public string GenreName { get; private set; } = null!;
 
     private Genre(){}
     

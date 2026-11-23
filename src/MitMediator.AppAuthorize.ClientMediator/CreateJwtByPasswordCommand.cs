@@ -5,7 +5,7 @@ namespace MitMediator.AppAuthorize.ClientMediator;
 
 [Pattern("auth/by-password")]
 [Method(MethodType.Post)]
-internal class CreateJwtByPasswordCommand : IRequest<JwtTokenModel>
+public sealed class CreateJwtByPasswordCommand : IRequest<JwtTokenModel>
 {
     public string Login { get; init; } = null!;
 

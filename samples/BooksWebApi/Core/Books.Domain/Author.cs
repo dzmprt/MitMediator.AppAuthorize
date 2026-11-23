@@ -18,12 +18,12 @@ public class Author
     /// <summary>
     /// First name.
     /// </summary>
-    public string FirstName { get; private set; }
+    public string FirstName { get; private set; } = null!;
     
     /// <summary>
     /// Last name.
     /// </summary>
-    public string LastName { get; private set; }
+    public string LastName { get; private set; } = null!;
 
     private Author(){}
     

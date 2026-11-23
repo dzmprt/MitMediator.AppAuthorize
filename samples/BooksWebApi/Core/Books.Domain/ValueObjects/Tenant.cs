@@ -14,12 +14,12 @@ public record Tenant
     /// <summary>
     /// Tenant id.
     /// </summary>
-    public string TenantId { get; private set; }
+    public string TenantId { get; private set; } = null!;
     
     /// <summary>
     /// Company name.
     /// </summary>
-    public string CompanyName { get; private set; }
+    public string CompanyName { get; private set; } = null!;
 
     private Tenant(){}
     

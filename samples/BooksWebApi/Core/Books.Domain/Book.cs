@@ -20,17 +20,17 @@ public class Book
     /// <summary>
     /// Title.
     /// </summary>
-    public string Title { get; private set; }
+    public string Title { get; private set; } = null!;
     
     /// <summary>
     /// Author.
     /// </summary>
-    public Author Author { get; private set; }
+    public Author Author { get; private set; } = null!;
     
     /// <summary>
     /// Genre.
     /// </summary>
-    public Genre Genre { get; private set; }
+    public Genre Genre { get; private set; } = null!;
 
     private Book(){}
     

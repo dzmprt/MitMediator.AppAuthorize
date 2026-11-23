@@ -13,10 +13,10 @@ public class CreateUserCommand : IRequest<User>
     /// <summary>
     /// New username.
     /// </summary>
-    public string Name { get; init; }
+    public string Name { get; init; } = null!;
     
     /// <summary>
     /// New user password.
     /// </summary>
-    public string Password { get; init; }
+    public string Password { get; init; } = null!;
 }

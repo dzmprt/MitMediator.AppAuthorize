@@ -8,7 +8,7 @@ public class UserInfo
     /// <summary>
     /// Gets the user identifier.
     /// </summary>
-    public string UserId { get; private set; }
+    public string UserId { get; }
 
     /// <summary>
     /// Gets the user name.
@@ -18,12 +18,12 @@ public class UserInfo
     /// <summary>
     /// Gets the user roles.
     /// </summary>
-    public string[]? Roles { get; }
+    public IReadOnlyList<string>? Roles { get; }
 
     /// <summary>
     /// Gets the user tenants.
     /// </summary>
-    public string[]? Tenants { get; }
+    public IReadOnlyList<string>? Tenants { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserInfo"/> class.
@@ -34,9 +34,22 @@ public class UserInfo
     /// <param name="tenants">The user tenants.</param>
     public UserInfo(string userId, string? name, string[]? roles = null, string[]? tenants = null)
     {
-        UserId = userId;
-        Name = name;
-        Roles = roles;
-        Tenants = tenants;
+        ArgumentException.ThrowIfNullOrWhiteSpace(userId);
+
+        UserId = userId.Trim();
+        Name = string.IsNullOrWhiteSpace(name) ? null : name.Trim();
+        Roles = NormalizeValues(roles);
+        Tenants = NormalizeValues(tenants);
+    }
+
+    private static IReadOnlyList<string>? NormalizeValues(string[]? values)
+    {
+        var normalized = values?
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value.Trim())
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+
+        return normalized is null ? null : Array.AsReadOnly(normalized);
     }
 }
